@@ -532,6 +532,27 @@
     .count-row b { font-weight: 800; font-variant-numeric: tabular-nums; }
     .count-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
 
+    .index-line {
+      margin: 8px 0 2px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      color: #273648;
+      font-size: 13px;
+    }
+    .index-line b { font-weight: 900; font-variant-numeric: tabular-nums; }
+
+    .share-row {
+      display: grid;
+      grid-template-columns: minmax(72px, 1fr) 2fr auto;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .share-label { overflow: hidden; color: #273648; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    .share-track { overflow: hidden; height: 8px; border-radius: 999px; background: #e4e9f2; }
+    .share-fill { display: block; height: 100%; border-radius: inherit; background: var(--primary); }
+    .share-val { min-width: 34px; color: #3f4d5f; font-size: 12px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+
     .hidden {
       display: none !important;
     }
@@ -979,8 +1000,17 @@
 
             const result = await compressDataUrl(dataUrl, settings);
             const savedBytes = result.originalBytes - result.compressedBytes;
-            const url = settings.onlyIfSmaller && savedBytes <= 0 ? dataUrl : result.dataUrl;
+            const keptOriginal = settings.onlyIfSmaller && savedBytes <= 0;
+            const url = keptOriginal ? dataUrl : result.dataUrl;
             const width = Math.min(900, Math.max(180, result.targetWidth));
+
+            const effBytes = estimateDataUrlBytes(url);
+            const effW = keptOriginal ? result.sourceWidth : result.targetWidth;
+            const effH = keptOriginal ? result.sourceHeight : result.targetHeight;
+            const limitIssues = checkUploadLimits(effBytes, effW, effH);
+            if (limitIssues.length > 0) {
+              addEntry(fileItem.file.name, `Achtung Upload-Limit (gegen Miro-Docs verifizieren): ${limitIssues.join(', ')}. Wird trotzdem versucht.`, 'skipped');
+            }
 
             fileItem.status = 'Wird eingefuegt';
             renderAll();
@@ -1271,6 +1301,55 @@
       return TYPE_LABELS[type] || type;
     }
 
+    // Analytische Gewichtungen aus der Recherche (keine gemessenen Miro-Werte).
+    // mult = relatives Gewicht ggue. einem Primitiv (=1,0). Nur zum Priorisieren/Ranken.
+    const TYPE_WEIGHTS = {
+      shape:       { mult: 1.00, cpu: 2, gpu: 2, ram: 2, net: 1, sync: 2 },
+      sticky_note: { mult: 1.00, cpu: 2, gpu: 2, ram: 2, net: 1, sync: 2 },
+      text:        { mult: 1.00, cpu: 2, gpu: 2, ram: 2, net: 1, sync: 2 },
+      emoji:       { mult: 1.00, cpu: 2, gpu: 2, ram: 2, net: 1, sync: 2 },
+      frame:       { mult: 0.67, cpu: 1, gpu: 1, ram: 1, net: 1, sync: 2 },
+      group:       { mult: 0.67, cpu: 1, gpu: 1, ram: 1, net: 1, sync: 2 },
+      connector:   { mult: 1.11, cpu: 3, gpu: 2, ram: 2, net: 1, sync: 2 },
+      card:        { mult: 1.22, cpu: 2, gpu: 2, ram: 2, net: 2, sync: 3 },
+      app_card:    { mult: 1.22, cpu: 2, gpu: 2, ram: 2, net: 2, sync: 3 },
+      code:        { mult: 1.30, cpu: 3, gpu: 2, ram: 3, net: 1, sync: 2 },
+      image:       { mult: 1.44, cpu: 3, gpu: 3, ram: 3, net: 2, sync: 2 },
+      preview:     { mult: 1.44, cpu: 3, gpu: 3, ram: 3, net: 2, sync: 2 },
+      stencil:     { mult: 1.44, cpu: 4, gpu: 3, ram: 3, net: 1, sync: 2 },
+      mockup:      { mult: 1.44, cpu: 4, gpu: 3, ram: 3, net: 1, sync: 2 },
+      stroke:      { mult: 1.44, cpu: 4, gpu: 3, ram: 3, net: 1, sync: 2 }, // Pen
+      document:    { mult: 1.89, cpu: 4, gpu: 3, ram: 4, net: 3, sync: 3 },
+      table:       { mult: 1.89, cpu: 4, gpu: 2, ram: 4, net: 3, sync: 4 },
+      kanban:      { mult: 1.89, cpu: 4, gpu: 2, ram: 4, net: 3, sync: 4 },
+      timeline:    { mult: 1.89, cpu: 4, gpu: 2, ram: 4, net: 3, sync: 4 },
+      embed:       { mult: 2.00, cpu: 4, gpu: 3, ram: 4, net: 4, sync: 3 },
+      unsupported: { mult: 1.70 }, // per SDK nicht lesbar – konservativ schwer
+    };
+    const DEFAULT_WEIGHT = { mult: 1.70 }; // unbekannter Typ -> wie Unsupported behandeln
+
+    function weightFor(type) {
+      return TYPE_WEIGHTS[type] || DEFAULT_WEIGHT;
+    }
+
+    // Upload-Grenzen laut Recherche – vor verbindlicher Nutzung gegen Live-Miro-Docs verifizieren.
+    const UPLOAD_LIMITS = { maxBytes: 30 * 1024 * 1024, maxMegapixels: 32, maxWidth: 8192, maxHeight: 4096 };
+
+    function checkUploadLimits(bytes, width, height) {
+      const issues = [];
+      if (Number.isFinite(bytes) && bytes > UPLOAD_LIMITS.maxBytes) {
+        issues.push(`ueber 30 MB (${formatBytes(bytes)})`);
+      }
+      if (Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0) {
+        const mp = (width * height) / 1e6;
+        if (mp > UPLOAD_LIMITS.maxMegapixels) issues.push(`ueber 32 MP (${mp.toFixed(1)} MP)`);
+        if (width > UPLOAD_LIMITS.maxWidth || height > UPLOAD_LIMITS.maxHeight) {
+          issues.push(`ueber 8192x4096 px (${width}x${height})`);
+        }
+      }
+      return issues;
+    }
+
     async function runAudit() {
       if (!hasMiro()) {
         state.audit = { error: 'Das Board-Audit braucht ein Miro Board. Starte die App aus einem Board heraus.' };
@@ -1374,6 +1453,50 @@
       return { cls: 'ok', text: 'im gruenen Bereich' };
     }
 
+    // Gewichteter Lastindex + Aufteilung nach Last-Dimension (synchron vs. Lade/RAM).
+    function computeAuditMetrics(counts) {
+      let loadIndex = 0;
+      let unsupportedCount = 0;
+      const syncContrib = [];
+      const loadContrib = [];
+      let syncTotal = 0;
+      let loadTotal = 0;
+
+      for (const [type, n] of Object.entries(counts)) {
+        if (type === 'tag') continue;
+        const w = weightFor(type);
+        loadIndex += n * (w.mult || DEFAULT_WEIGHT.mult);
+
+        // Alles, was nicht sicher gewichtet werden kann, ist Blind Spot.
+        if (type === 'unsupported' || !TYPE_WEIGHTS[type]) unsupportedCount += n;
+
+        if (Number.isFinite(w.sync)) {
+          const s = n * w.sync;
+          syncTotal += s;
+          syncContrib.push({ type, score: s });
+        }
+        if (Number.isFinite(w.cpu)) {
+          const l = n * (w.cpu + w.ram + w.net);
+          loadTotal += l;
+          loadContrib.push({ type, score: l });
+        }
+      }
+
+      const top = (arr, total) => arr
+        .slice()
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3)
+        .filter((e) => e.score > 0)
+        .map((e) => ({ type: e.type, share: total > 0 ? Math.round((e.score / total) * 100) : 0 }));
+
+      return {
+        loadIndex: Math.round(loadIndex),
+        unsupportedCount,
+        syncTop: top(syncContrib, syncTotal),
+        loadTop: top(loadContrib, loadTotal),
+      };
+    }
+
     function renderAudit() {
       const box = els['audit-results'];
       if (!box) return;
@@ -1394,6 +1517,24 @@
 
       const status = objectStatus(a.total);
       const dis = (state.running || state.busy) ? 'disabled' : '';
+      const m = computeAuditMetrics(a.counts);
+      const delta = a.total > 0 ? Math.round(((m.loadIndex - a.total) / a.total) * 100) : 0;
+      const embedWeighted = Math.round(a.embeds.length * (TYPE_WEIGHTS.embed.mult));
+      const indexNote = delta < 15
+        ? `Heute liegt der Index nur ${delta}% ueber der reinen Zahl – die vielen Primitive dominieren. Er zieht spuerbar an, sobald schwere Klassen (Embeds, Tabellen, Dokumente) ueber die Woche wachsen.`
+        : `Schwere Klassen heben den Index bereits ${delta}% ueber die reine Objektzahl – hier lohnt Entschlacken (Spur 2) mehr als reines Aufraeumen.`;
+
+      const dimBlock = (title, rows, trackText) => `
+        <div class="card">
+          <p class="subhead" style="margin-top:0">${title}</p>
+          ${rows.length ? rows.map((r) => `
+            <div class="share-row">
+              <span class="share-label">${escapeHtml(typeLabel(r.type))}</span>
+              <span class="share-track"><span class="share-fill" style="width:${r.share}%"></span></span>
+              <span class="share-val">${r.share}%</span>
+            </div>`).join('') : '<p class="lead">Keine zuordenbaren Objekte.</p>'}
+          <p class="lead">${trackText}</p>
+        </div>`;
 
       const sortedTypes = Object.entries(a.counts)
         .filter(([type]) => type !== 'tag')
@@ -1431,23 +1572,37 @@
             </div>
             <span class="badge ${status.cls}"><span class="badge-dot"></span>${status.text}</span>
           </div>
-          <p class="lead">Miro nennt spuerbare Effekte ab ~${OBJECT_THRESHOLD_SOFT.toLocaleString('de-DE')} und empfiehlt unter ${OBJECT_THRESHOLD_MAX.toLocaleString('de-DE')} Objekten pro Board.</p>
+          <div class="index-line">
+            <span>Gewichteter Lastindex <b>${m.loadIndex.toLocaleString('de-DE')}</b> (${delta >= 0 ? '+' : ''}${delta}% ggue. Zahl)</span>
+          </div>
+          <p class="lead">Miro nennt spuerbare Effekte ab ~${OBJECT_THRESHOLD_SOFT.toLocaleString('de-DE')} und empfiehlt unter ${OBJECT_THRESHOLD_MAX.toLocaleString('de-DE')} Objekten. Die 1.000/5.000-Ampel ist zaehlbasiert; der Lastindex ist eine analytische Gewichtung (keine gemessenen Miro-Werte) zum Ranken.</p>
+          <p class="lead">${indexNote}</p>
         </div>
+
+        ${dimBlock('Live-Sync-Risiko (Ruckeln in der Session)', m.syncTop,
+          'Treiber sind Tabellen/Kanban, Cards und Embeds. Hebel: Session-Verhalten + Editoren reduzieren (Spuren 3/6/10) – nicht Bilder verkleinern.')}
+        ${dimBlock('Lade- / RAM-Risiko (langsamer Start, „Syncing…")', m.loadTop,
+          'Treiber sind Embeds, Dokumente, Tabellen und Bilder. Hebel: flatten, Embeds zu Bookmarks, Bilder verkleinern (Spur 2).')}
 
         <p class="subhead">Schwere Inhalte</p>
 
+        <div class="flag-row">
+          <div><strong>Embeds · ${a.embeds.length}</strong><span>Schwerster Einzeltyp (mult 2,0) ≈ Last von ~${embedWeighted.toLocaleString('de-DE')} Primitiven. Nicht aktiv genutzte → Bookmark/Link (Spur 2).</span></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="embeds" ${dis}>Markieren</button></div>
+        </div>
         <div class="flag-row">
           <div><strong>Bilder · ${a.images.length}</strong>${a.measured || a.measuring ? `<span class="measure-slot"></span>` : '<span>Kandidaten fuer Verkleinerung im Tab „Komprimieren".</span>'}</div>
           <div class="flag-actions">
             <button class="mini-button" type="button" data-focus="images" ${dis}>Markieren</button>
           </div>
         </div>
+        ${m.unsupportedCount > 0 ? `
         <div class="flag-row">
-          <div><strong>Embeds · ${a.embeds.length}</strong><span>Externe Inhalte fruehzeitig auditieren / auslagern.</span></div>
-          <div class="flag-actions"><button class="mini-button" type="button" data-focus="embeds" ${dis}>Markieren</button></div>
-        </div>
+          <div><strong>Unsupported / unbekannt · ${m.unsupportedCount}</strong><span>Per SDK nicht lesbar (oft Pen, Mockup, Kanban). Im Index konservativ mit mult 1,7 angesetzt – nicht auditierbar, vermutlich schwer.</span></div>
+          <div class="flag-actions"></div>
+        </div>` : ''}
         <div class="flag-row">
-          <div><strong>Tabellen · ${a.tables.length}</strong><span>Grosse Tabellen unter 200 Zeilen halten (manuell pruefen).</span></div>
+          <div><strong>Tabellen · ${a.tables.length}</strong><span>Bei vielen Spalten unter 200 Zeilen halten (Zeilenzahl per SDK nicht auslesbar – manuell pruefen). Board-Limit: max. 250 strukturierte Widgets (Tabellen + Timelines + Synced Cards).</span></div>
           <div class="flag-actions"><button class="mini-button" type="button" data-focus="tables" ${dis}>Markieren</button></div>
         </div>
         <div class="flag-row">
