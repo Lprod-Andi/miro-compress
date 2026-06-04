@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Miro Bildkompressor</title>
+  <title>Miro Board-Werkzeug</title>
   <script src="https://miro.com/app/static/sdk/v2/miro.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -425,6 +425,8 @@
       font-weight: 800;
     }
 
+    .mini-button:disabled { cursor: not-allowed; opacity: 0.55; }
+
     .log-row {
       display: grid;
       grid-template-columns: 10px 1fr;
@@ -453,6 +455,83 @@
       text-align: center;
     }
 
+    /* --- Erweiterung: Audit (M1) & Umgebungs-Check (M2) --- */
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .subhead {
+      margin: 2px 0 -2px;
+      color: #3f4d5f;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .audit-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .audit-total .num {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .badge.ok { background: #e3f4ea; color: var(--ok); }
+    .badge.warn { background: #fbf0db; color: var(--warn); }
+    .badge.bad { background: #fbe4e2; color: var(--bad); }
+
+    .flag-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .flag-row strong { display: block; color: var(--text); font-size: 13px; }
+    .flag-row span { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .flag-actions { display: flex; gap: 6px; align-items: center; }
+
+    .count-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: #273648;
+      font-size: 13px;
+    }
+
+    .count-row b { font-weight: 800; font-variant-numeric: tabular-nums; }
+    .count-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+
     .hidden {
       display: none !important;
     }
@@ -473,7 +552,7 @@
     <header class="topbar">
       <div>
         <p class="eyebrow">Miro Board Tool</p>
-        <h1>Bildkompressor</h1>
+        <h1>Board-Werkzeug</h1>
       </div>
       <div id="connection" class="status-pill">
         <span class="status-dot"></span>
@@ -482,8 +561,10 @@
     </header>
 
     <nav class="tabs" aria-label="Werkzeugbereich">
-      <button id="tab-board" class="tab-button active" type="button">Board</button>
+      <button id="tab-board" class="tab-button active" type="button">Komprimieren</button>
       <button id="tab-upload" class="tab-button" type="button">Vor Einfuegen</button>
+      <button id="tab-audit" class="tab-button" type="button">Board-Audit</button>
+      <button id="tab-env" class="tab-button" type="button">Umgebung</button>
     </nav>
 
     <section class="metrics" aria-live="polite">
@@ -571,11 +652,29 @@
         <ol id="file-list" class="file-list"></ol>
       </section>
 
-      <div class="actions">
+      <section id="audit-panel" class="stack hidden">
+        <p class="lead">Zaehlt alle Objekte auf dem Board, gleicht sie mit den Miro-Schwellen ab (ab ~1.000 spuerbar, unter 5.000 empfohlen) und markiert schwere Inhalte. Es wird nichts veraendert oder geloescht.</p>
+        <div class="actions">
+          <button id="run-audit-button" class="button primary" type="button">Board scannen</button>
+          <button id="focus-selection-button" class="button secondary" type="button">Auswahl anzeigen</button>
+        </div>
+        <div id="audit-results" class="stack"></div>
+      </section>
+
+      <section id="env-panel" class="stack hidden">
+        <p class="lead">Prueft die lokale Umgebung dieses Rechners gegen die Miro-Anforderungen: GPU-Beschleunigung, WebAssembly, Browser, Arbeitsspeicher, Aufloesung und Verbindung. Laeuft auch ohne Board.</p>
+        <div class="actions">
+          <button id="run-env-button" class="button primary" type="button">Umgebung pruefen</button>
+          <button id="copy-env-button" class="button secondary" type="button">Bericht kopieren</button>
+        </div>
+        <div id="env-results" class="stack"></div>
+      </section>
+
+      <div id="cancel-row" class="actions">
         <button id="cancel-button" class="button secondary" type="button" disabled>Abbrechen</button>
       </div>
 
-      <section class="card">
+      <section id="progress-card" class="card">
         <div class="progress-head">
           <span id="progress-label">Bereit</span>
           <span id="progress-percent">0%</span>
@@ -589,7 +688,7 @@
         </div>
       </section>
 
-      <section>
+      <section id="log-section">
         <ol id="log-list" class="log-list"></ol>
       </section>
     </section>
@@ -600,10 +699,13 @@
       mode: 'board',
       selectedCount: 0,
       running: false,
+      busy: false,
       cancelRequested: false,
       files: [],
       summary: { total: 0, done: 0, skipped: 0, failed: 0, savedBytes: 0 },
       entries: [],
+      audit: null,
+      env: null,
     };
 
     const els = {};
@@ -618,13 +720,16 @@
 
     function cacheElements() {
       for (const id of [
-        'connection', 'connection-label', 'tab-board', 'tab-upload', 'metric-selection',
-        'metric-done', 'metric-saved', 'scope-fieldset', 'quality-input', 'quality-output',
-        'board-panel', 'upload-panel', 'refresh-button', 'compress-board-button',
-        'restore-backup-button', 'clear-backups-button',
+        'connection', 'connection-label', 'tab-board', 'tab-upload', 'tab-audit', 'tab-env',
+        'metric-selection', 'metric-done', 'metric-saved', 'settings-form', 'scope-fieldset',
+        'quality-input', 'quality-output',
+        'board-panel', 'upload-panel', 'audit-panel', 'env-panel',
+        'refresh-button', 'compress-board-button', 'restore-backup-button', 'clear-backups-button',
         'drop-zone', 'file-input', 'clear-files-button', 'insert-files-button', 'file-list',
-        'cancel-button', 'progress-label', 'progress-percent', 'progress-fill',
-        'summary-skipped', 'summary-failed', 'log-list',
+        'run-audit-button', 'focus-selection-button', 'audit-results',
+        'run-env-button', 'copy-env-button', 'env-results',
+        'cancel-row', 'cancel-button', 'progress-card', 'progress-label', 'progress-percent',
+        'progress-fill', 'summary-skipped', 'summary-failed', 'log-section', 'log-list',
       ]) {
         els[id] = document.getElementById(id);
       }
@@ -633,10 +738,16 @@
     function bindUi() {
       els['tab-board'].addEventListener('click', () => setMode('board'));
       els['tab-upload'].addEventListener('click', () => setMode('upload'));
+      els['tab-audit'].addEventListener('click', () => setMode('audit'));
+      els['tab-env'].addEventListener('click', () => setMode('env'));
       els['refresh-button'].addEventListener('click', refreshSelectionCount);
       els['compress-board-button'].addEventListener('click', () => runBoardCompression(readSettings()));
       els['restore-backup-button'].addEventListener('click', restoreLatestBackup);
       els['clear-backups-button'].addEventListener('click', clearBackups);
+      els['run-audit-button'].addEventListener('click', runAudit);
+      els['focus-selection-button'].addEventListener('click', focusSelection);
+      els['run-env-button'].addEventListener('click', runEnvCheck);
+      els['copy-env-button'].addEventListener('click', copyEnvReport);
       els['cancel-button'].addEventListener('click', () => {
         state.cancelRequested = true;
         addEntry('Abbruch angefordert', 'Der aktuelle Schritt wird noch beendet.', 'skipped');
@@ -686,7 +797,7 @@
     }
 
     function setMode(mode) {
-      if (state.running) return;
+      if (state.running || state.busy) return;
       state.mode = mode;
       renderAll();
     }
@@ -1061,12 +1172,23 @@
     function renderAll() {
       const processed = state.summary.done + state.summary.skipped + state.summary.failed;
       const percent = state.summary.total > 0 ? Math.round((processed / state.summary.total) * 100) : 0;
+      const isCompress = state.mode === 'board' || state.mode === 'upload';
 
       els['tab-board'].classList.toggle('active', state.mode === 'board');
       els['tab-upload'].classList.toggle('active', state.mode === 'upload');
+      els['tab-audit'].classList.toggle('active', state.mode === 'audit');
+      els['tab-env'].classList.toggle('active', state.mode === 'env');
+
       els['board-panel'].classList.toggle('hidden', state.mode !== 'board');
       els['upload-panel'].classList.toggle('hidden', state.mode !== 'upload');
+      els['audit-panel'].classList.toggle('hidden', state.mode !== 'audit');
+      els['env-panel'].classList.toggle('hidden', state.mode !== 'env');
+
+      els['settings-form'].classList.toggle('hidden', !isCompress);
       els['scope-fieldset'].classList.toggle('hidden', state.mode !== 'board');
+      els['cancel-row'].classList.toggle('hidden', !isCompress);
+      els['progress-card'].classList.toggle('hidden', !isCompress);
+      els['log-section'].classList.toggle('hidden', !isCompress);
 
       els['metric-selection'].textContent = String(state.selectedCount);
       els['metric-done'].textContent = String(state.summary.done);
@@ -1077,7 +1199,7 @@
       els['summary-skipped'].textContent = `${state.summary.skipped} uebersprungen`;
       els['summary-failed'].textContent = `${state.summary.failed} Fehler`;
 
-      const disabled = state.running;
+      const disabled = state.running || state.busy;
       for (const selector of ['button', 'input']) {
         document.querySelectorAll(selector).forEach((element) => {
           if (element.id === 'cancel-button') return;
@@ -1088,6 +1210,8 @@
 
       renderFiles();
       renderLog();
+      renderAudit();
+      renderEnv();
     }
 
     function renderFiles() {
@@ -1130,6 +1254,479 @@
         </li>
       `).join('');
     }
+
+    /* ------------------------- M1 · Board-Audit ------------------------- */
+
+    const OBJECT_THRESHOLD_SOFT = 1000;
+    const OBJECT_THRESHOLD_MAX = 5000;
+    const TYPE_LABELS = {
+      shape: 'Formen', sticky_note: 'Sticky Notes', text: 'Text', frame: 'Frames',
+      card: 'Cards', app_card: 'App Cards', image: 'Bilder', embed: 'Embeds',
+      connector: 'Verbindungen', group: 'Gruppen', table: 'Tabellen',
+      document: 'Dokumente', preview: 'Previews', mindmap_node: 'Mindmap',
+      unsupported: 'Unsupported', usm: 'USM', stencil: 'Stencil', emoji: 'Emoji',
+    };
+
+    function typeLabel(type) {
+      return TYPE_LABELS[type] || type;
+    }
+
+    async function runAudit() {
+      if (!hasMiro()) {
+        state.audit = { error: 'Das Board-Audit braucht ein Miro Board. Starte die App aus einem Board heraus.' };
+        renderAll();
+        return;
+      }
+
+      state.busy = true;
+      state.audit = { scanning: true };
+      renderAll();
+
+      try {
+        const all = await window.miro.board.get();
+        const counts = {};
+        const frames = [];
+        const nonFrame = [];
+        const images = [];
+        const tables = [];
+        const embeds = [];
+        let total = 0;
+
+        for (const item of all) {
+          const type = item?.type;
+          if (!type) continue;
+          counts[type] = (counts[type] || 0) + 1;
+          if (type === 'tag') continue;
+          total += 1;
+          if (type === 'frame') frames.push(item);
+          else nonFrame.push(item);
+          if (type === 'image') images.push(item);
+          if (type === 'table') tables.push(item);
+          if (type === 'embed') embeds.push(item);
+        }
+
+        const outside = findItemsOutsideFrames(nonFrame, frames);
+
+        state.audit = {
+          total,
+          counts,
+          frames,
+          images,
+          tables,
+          embeds,
+          outside,
+          measured: false,
+          measuring: null,
+          scannedAt: new Date(),
+        };
+      } catch (error) {
+        state.audit = { error: messageFrom(error) };
+      } finally {
+        state.busy = false;
+        renderAll();
+      }
+    }
+
+    function findItemsOutsideFrames(items, frames) {
+      const boxes = frames
+        .filter((f) => [f.x, f.y, f.width, f.height].every(Number.isFinite))
+        .map((f) => ({ l: f.x - f.width / 2, r: f.x + f.width / 2, t: f.y - f.height / 2, b: f.y + f.height / 2 }));
+
+      const out = [];
+      for (const item of items) {
+        if (item.type === 'connector' || item.type === 'group' || item.type === 'tag') continue;
+        const { x, y } = item;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+        const inside = boxes.some((b) => x >= b.l && x <= b.r && y >= b.t && y <= b.b);
+        if (!inside) out.push(item);
+      }
+      return out;
+    }
+
+    async function measureImageBytes() {
+      if (!state.audit || !Array.isArray(state.audit.images) || state.audit.images.length === 0) return;
+      state.busy = true;
+      const images = state.audit.images;
+      state.audit.measuring = { done: 0, total: images.length };
+      renderAll();
+
+      for (let i = 0; i < images.length; i += 1) {
+        try {
+          const dataUrl = await images[i].getDataUrl('original');
+          images[i].__bytes = estimateDataUrlBytes(dataUrl);
+        } catch {
+          images[i].__bytes = null;
+        }
+        state.audit.measuring = { done: i + 1, total: images.length };
+        renderAll();
+        await wait(40);
+      }
+
+      state.audit.measured = true;
+      state.audit.measuring = null;
+      state.busy = false;
+      renderAll();
+    }
+
+    function objectStatus(total) {
+      if (total >= OBJECT_THRESHOLD_MAX) return { cls: 'bad', text: 'ueber Empfehlung' };
+      if (total >= OBJECT_THRESHOLD_SOFT) return { cls: 'warn', text: 'kritischer Bereich' };
+      return { cls: 'ok', text: 'im gruenen Bereich' };
+    }
+
+    function renderAudit() {
+      const box = els['audit-results'];
+      if (!box) return;
+      const a = state.audit;
+
+      if (!a) {
+        box.innerHTML = '<div class="empty">Noch nicht gescannt. Tippe auf „Board scannen".</div>';
+        return;
+      }
+      if (a.error) {
+        box.innerHTML = `<div class="empty">${escapeHtml(a.error)}</div>`;
+        return;
+      }
+      if (a.scanning) {
+        box.innerHTML = '<div class="empty">Board wird gescannt …</div>';
+        return;
+      }
+
+      const status = objectStatus(a.total);
+      const dis = (state.running || state.busy) ? 'disabled' : '';
+
+      const sortedTypes = Object.entries(a.counts)
+        .filter(([type]) => type !== 'tag')
+        .sort((x, y) => y[1] - x[1]);
+
+      const biggest = a.measured
+        ? a.images.filter((i) => Number.isFinite(i.__bytes)).sort((x, y) => y.__bytes - x.__bytes)
+        : [];
+
+      let measureBlock;
+      if (a.measuring) {
+        measureBlock = `<span class="badge warn"><span class="badge-dot"></span>misst ${a.measuring.done}/${a.measuring.total}</span>`;
+      } else if (a.measured) {
+        const top = biggest.slice(0, 3)
+          .map((i) => `${escapeHtml(i.title?.trim() || 'Bild')} · ${formatBytes(i.__bytes)}`)
+          .join('<br>');
+        measureBlock = `
+          <span>${biggest.length ? 'Groesste: <br>' + top : 'Keine Byte-Daten ermittelbar.'}</span>
+          <div class="flag-actions">
+            ${biggest.length ? `<button class="mini-button" type="button" data-focus="biggest" ${dis}>Groesstes</button>` : ''}
+            <button class="mini-button" type="button" data-measure ${dis}>Neu messen</button>
+          </div>`;
+      } else {
+        measureBlock = `
+          <span>Bytes pro Bild noch nicht gemessen.</span>
+          <div class="flag-actions"><button class="mini-button" type="button" data-measure ${dis}>Schwere messen</button></div>`;
+      }
+
+      box.innerHTML = `
+        <div class="card">
+          <div class="audit-total">
+            <div>
+              <div class="num">${a.total.toLocaleString('de-DE')}</div>
+              <div class="lead">Objekte (ohne Tags)</div>
+            </div>
+            <span class="badge ${status.cls}"><span class="badge-dot"></span>${status.text}</span>
+          </div>
+          <p class="lead">Miro nennt spuerbare Effekte ab ~${OBJECT_THRESHOLD_SOFT.toLocaleString('de-DE')} und empfiehlt unter ${OBJECT_THRESHOLD_MAX.toLocaleString('de-DE')} Objekten pro Board.</p>
+        </div>
+
+        <p class="subhead">Schwere Inhalte</p>
+
+        <div class="flag-row">
+          <div><strong>Bilder · ${a.images.length}</strong>${a.measured || a.measuring ? `<span class="measure-slot"></span>` : '<span>Kandidaten fuer Verkleinerung im Tab „Komprimieren".</span>'}</div>
+          <div class="flag-actions">
+            <button class="mini-button" type="button" data-focus="images" ${dis}>Markieren</button>
+          </div>
+        </div>
+        <div class="flag-row">
+          <div><strong>Embeds · ${a.embeds.length}</strong><span>Externe Inhalte fruehzeitig auditieren / auslagern.</span></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="embeds" ${dis}>Markieren</button></div>
+        </div>
+        <div class="flag-row">
+          <div><strong>Tabellen · ${a.tables.length}</strong><span>Grosse Tabellen unter 200 Zeilen halten (manuell pruefen).</span></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="tables" ${dis}>Markieren</button></div>
+        </div>
+        <div class="flag-row">
+          <div><strong>Ausserhalb von Frames · ${a.outside.length}</strong><span>Geometrisch geschaetzt – bitte visuell pruefen.</span></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="outside" ${dis}>Markieren</button></div>
+        </div>
+
+        <p class="subhead">Alle Objekte nach Typ</p>
+        <ul class="count-list">
+          ${sortedTypes.map(([type, n]) => `<li class="count-row"><span>${escapeHtml(typeLabel(type))}</span><b>${n.toLocaleString('de-DE')}</b></li>`).join('')}
+        </ul>
+        <p class="lead">Hinweis: Zaehlung kann leicht von der Miro-Oberflaeche abweichen (Gruppen-Eintraege, nicht unterstuetzte Typen). „Unsupported"-Objekte kann ein Plugin nicht lesen oder anfassen.</p>
+      `;
+
+      const slot = box.querySelector('.measure-slot');
+      if (slot) slot.innerHTML = measureBlock;
+
+      bindAuditActions();
+    }
+
+    function bindAuditActions() {
+      const box = els['audit-results'];
+      if (!box) return;
+
+      box.querySelectorAll('[data-focus]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const a = state.audit;
+          if (!a) return;
+          const map = {
+            images: a.images,
+            embeds: a.embeds,
+            tables: a.tables,
+            outside: a.outside,
+            biggest: a.images.filter((i) => Number.isFinite(i.__bytes)).sort((x, y) => y.__bytes - x.__bytes).slice(0, 1),
+          };
+          focusItems(map[btn.dataset.focus] || [], btn.dataset.focus);
+        });
+      });
+
+      const measureBtn = box.querySelector('[data-measure]');
+      if (measureBtn) measureBtn.addEventListener('click', measureImageBytes);
+    }
+
+    async function focusItems(items, kind) {
+      if (!hasMiro()) {
+        notify('Nur in Miro verfuegbar.');
+        return;
+      }
+      const valid = (items || []).filter((i) => i && i.id);
+      if (valid.length === 0) {
+        notify('Nichts gefunden, das markiert werden koennte.');
+        return;
+      }
+      try {
+        await window.miro.board.select({ id: valid.map((i) => i.id) });
+        await window.miro.board.viewport.zoomTo(valid);
+        notify(`${valid.length} Objekt(e) markiert und angezeigt.`);
+      } catch (error) {
+        notify(messageFrom(error));
+      }
+    }
+
+    async function focusSelection() {
+      if (!hasMiro()) {
+        notify('Nur in Miro verfuegbar.');
+        return;
+      }
+      try {
+        const selection = await window.miro.board.getSelection();
+        if (selection.length === 0) {
+          notify('Es ist nichts ausgewaehlt.');
+          return;
+        }
+        await window.miro.board.viewport.zoomTo(selection);
+      } catch (error) {
+        notify(messageFrom(error));
+      }
+    }
+
+    /* ----------------------- M2 · Umgebungs-Check ----------------------- */
+
+    function runEnvCheck() {
+      const items = [];
+
+      const gl = getWebGLContext();
+      if (gl) {
+        const renderer = getGpuRenderer(gl);
+        items.push({
+          label: 'GPU-Beschleunigung (WebGL)',
+          value: renderer || 'verfuegbar',
+          status: 'ok',
+          hint: 'WebGL ist aktiv – guter Indikator fuer Hardware-Beschleunigung. (Keine 100%-Garantie, dass Miro die GPU nutzt.)',
+        });
+      } else {
+        items.push({
+          label: 'GPU-Beschleunigung (WebGL)',
+          value: 'nicht verfuegbar',
+          status: 'bad',
+          hint: 'WebGL fehlt → Miro rendert moeglicherweise per CPU. Hardware-Beschleunigung im Browser aktivieren bzw. Unternehmens-Policy pruefen.',
+        });
+      }
+
+      const wasm = typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function';
+      items.push({
+        label: 'WebAssembly',
+        value: wasm ? 'verfuegbar' : 'blockiert',
+        status: wasm ? 'ok' : 'bad',
+        hint: wasm ? 'WASM verfuegbar.' : 'WASM blockiert → Miro-Funktionen laden evtl. nicht vollstaendig. Policy oder Erweiterungen pruefen.',
+      });
+
+      const browser = detectBrowser();
+      const isStandard = browser.name === 'Chrome' || browser.name === 'Edge';
+      items.push({
+        label: 'Browser',
+        value: `${browser.name}${browser.version ? ' ' + browser.version : ''}`,
+        status: isStandard ? 'ok' : 'warn',
+        hint: isStandard
+          ? 'Entspricht dem empfohlenen Standard (aktueller Chrome oder Edge).'
+          : 'Empfohlen ist aktueller Chrome oder Edge. Safari/Firefox sind fuer grosse Live-Boards nicht erste Wahl.',
+      });
+
+      const mem = navigator.deviceMemory;
+      if (Number.isFinite(mem)) {
+        items.push({
+          label: 'Arbeitsspeicher (Richtwert)',
+          value: `~${mem} GB`,
+          status: mem >= 8 ? 'ok' : mem >= 4 ? 'warn' : 'bad',
+          hint: mem >= 8 ? 'Ausreichend fuer grosse Boards.' : 'Wenig RAM-Richtwert. Andere Tabs/Programme schliessen, parallele Videocalls vermeiden.',
+        });
+      } else {
+        items.push({ label: 'Arbeitsspeicher (Richtwert)', value: 'nicht auslesbar', status: 'warn', hint: 'Dieser Browser meldet keinen RAM-Richtwert (nur Chromium-Browser tun das).' });
+      }
+
+      const cores = navigator.hardwareConcurrency;
+      if (Number.isFinite(cores)) {
+        items.push({
+          label: 'CPU-Kerne (logisch)',
+          value: String(cores),
+          status: cores >= 4 ? 'ok' : 'warn',
+          hint: cores >= 4 ? 'Genug fuer fluessiges Rendern.' : 'Wenige Kerne – Hintergrundprozesse begrenzen.',
+        });
+      }
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = window.screen?.width || 0;
+      const h = window.screen?.height || 0;
+      const physicalW = Math.round(w * dpr);
+      const highRes = physicalW >= 3840;
+      items.push({
+        label: 'Aufloesung',
+        value: `${w}×${h} @ ${dpr.toFixed(2)}x`,
+        status: highRes ? 'warn' : 'ok',
+        hint: highRes ? '4K/hochaufloesend kostet Renderleistung. Bei Rucklern Zoom/Skalierung reduzieren oder kleineres Fenster nutzen.' : 'Unkritisch.',
+      });
+
+      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (conn) {
+        const down = Number.isFinite(conn.downlink) ? conn.downlink : null;
+        const eff = conn.effectiveType || '';
+        let status = 'ok';
+        if (down != null && down < 8) status = 'bad';
+        else if ((down != null && down < 32) || eff === '3g' || eff === '2g') status = 'warn';
+        items.push({
+          label: 'Verbindung (Schaetzung)',
+          value: `${eff || 'unbekannt'}${down != null ? ' · ~' + down + ' Mbit/s' : ''}`,
+          status,
+          hint: 'Miro: min. 8 Mbit/s, empfohlen 32. Stabilitaet zaehlt mehr als Spitzenwert – bei Problemen VPN aus und Alternativnetz testen.',
+        });
+      } else {
+        items.push({ label: 'Verbindung (Schaetzung)', value: 'nicht auslesbar', status: 'warn', hint: 'Browser meldet keine Verbindungsdaten. Auf Stabilitaet achten, VPN testweise aus.' });
+      }
+
+      items.push({
+        label: 'Ausfuehrungskontext',
+        value: hasMiro() ? 'im Miro Board' : 'lokal (kein Board)',
+        status: hasMiro() ? 'ok' : 'warn',
+        hint: hasMiro() ? 'Board-Funktionen verfuegbar.' : 'Fuer Board-Audit und Markieren die App aus einem Miro Board starten.',
+      });
+
+      state.env = { items, checkedAt: new Date() };
+      renderAll();
+    }
+
+    function getWebGLContext() {
+      try {
+        const canvas = document.createElement('canvas');
+        return canvas.getContext('webgl') || canvas.getContext('experimental-webgl') || null;
+      } catch {
+        return null;
+      }
+    }
+
+    function getGpuRenderer(gl) {
+      try {
+        const ext = gl.getExtension('WEBGL_debug_renderer_info');
+        if (!ext) return '';
+        const r = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
+        return typeof r === 'string' ? r : '';
+      } catch {
+        return '';
+      }
+    }
+
+    function detectBrowser() {
+      const ua = navigator.userAgent || '';
+      const data = navigator.userAgentData;
+      if (data && Array.isArray(data.brands)) {
+        const known = data.brands.find((b) => /Edge/i.test(b.brand)) ? 'Edge'
+          : data.brands.find((b) => /Google Chrome/i.test(b.brand)) ? 'Chrome'
+          : data.brands.find((b) => /Chromium/i.test(b.brand)) ? 'Chromium' : '';
+        if (known) {
+          const brand = data.brands.find((b) => b.brand.includes(known === 'Chrome' ? 'Google Chrome' : known));
+          return { name: known, version: brand?.version || '' };
+        }
+      }
+      let m;
+      if ((m = ua.match(/Edg\/(\d+)/))) return { name: 'Edge', version: m[1] };
+      if ((m = ua.match(/OPR\/(\d+)/))) return { name: 'Opera', version: m[1] };
+      if ((m = ua.match(/Firefox\/(\d+)/))) return { name: 'Firefox', version: m[1] };
+      if (/Chrome\/(\d+)/.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua)) {
+        return { name: 'Chrome', version: (ua.match(/Chrome\/(\d+)/) || [])[1] || '' };
+      }
+      if (/Safari\//.test(ua) && /Version\/(\d+)/.test(ua) && !/Chrome\//.test(ua)) {
+        return { name: 'Safari', version: (ua.match(/Version\/(\d+)/) || [])[1] || '' };
+      }
+      return { name: 'Unbekannt', version: '' };
+    }
+
+    function renderEnv() {
+      const box = els['env-results'];
+      if (!box) return;
+      const e = state.env;
+
+      if (!e) {
+        box.innerHTML = '<div class="empty">Noch nicht geprueft. Tippe auf „Umgebung pruefen".</div>';
+        return;
+      }
+
+      const statusToRow = { ok: 'done', warn: 'skipped', bad: 'error' };
+      box.innerHTML = `
+        <ul class="log-list">
+          ${e.items.map((it) => `
+            <li class="log-row ${statusToRow[it.status] || ''}">
+              <span class="log-dot"></span>
+              <div>
+                <strong>${escapeHtml(it.label)}: ${escapeHtml(it.value)}</strong>
+                <p>${escapeHtml(it.hint)}</p>
+              </div>
+            </li>
+          `).join('')}
+        </ul>`;
+    }
+
+    function envReportText() {
+      const e = state.env;
+      if (!e) return '';
+      const lines = [`Umgebungs-Check · ${e.checkedAt.toLocaleString('de-DE')}`];
+      for (const it of e.items) {
+        const mark = it.status === 'ok' ? '[OK]' : it.status === 'warn' ? '[!]' : '[X]';
+        lines.push(`${mark} ${it.label}: ${it.value}`);
+      }
+      return lines.join('\n');
+    }
+
+    async function copyEnvReport() {
+      const text = envReportText();
+      if (!text) {
+        notify('Erst „Umgebung pruefen" ausfuehren.');
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        notify('Bericht in die Zwischenablage kopiert.');
+      } catch {
+        window.prompt('Bericht kopieren (Strg+C):', text);
+      }
+    }
+
+    /* --------------------------- gemeinsam ----------------------------- */
 
     function isImageItem(item) {
       return item?.type === 'image' && typeof item.getDataUrl === 'function';
