@@ -532,6 +532,11 @@
         </label>
 
         <label class="check-row">
+          <input name="createBackup" type="checkbox" checked />
+          <span>Backup vor dem Ersetzen lokal sichern</span>
+        </label>
+
+        <label class="check-row">
           <input name="keepPng" type="checkbox" />
           <span>PNG als PNG behalten</span>
         </label>
@@ -546,6 +551,10 @@
         <div class="actions">
           <button id="refresh-button" class="button secondary" type="button">Aktualisieren</button>
           <button id="compress-board-button" class="button primary" type="button">Komprimieren</button>
+        </div>
+        <div class="actions">
+          <button id="restore-backup-button" class="button secondary" type="button">Letztes Backup wiederherstellen</button>
+          <button id="clear-backups-button" class="button secondary" type="button">Backups loeschen</button>
         </div>
       </section>
 
@@ -612,6 +621,7 @@
         'connection', 'connection-label', 'tab-board', 'tab-upload', 'metric-selection',
         'metric-done', 'metric-saved', 'scope-fieldset', 'quality-input', 'quality-output',
         'board-panel', 'upload-panel', 'refresh-button', 'compress-board-button',
+        'restore-backup-button', 'clear-backups-button',
         'drop-zone', 'file-input', 'clear-files-button', 'insert-files-button', 'file-list',
         'cancel-button', 'progress-label', 'progress-percent', 'progress-fill',
         'summary-skipped', 'summary-failed', 'log-list',
@@ -625,6 +635,8 @@
       els['tab-upload'].addEventListener('click', () => setMode('upload'));
       els['refresh-button'].addEventListener('click', refreshSelectionCount);
       els['compress-board-button'].addEventListener('click', () => runBoardCompression(readSettings()));
+      els['restore-backup-button'].addEventListener('click', restoreLatestBackup);
+      els['clear-backups-button'].addEventListener('click', clearBackups);
       els['cancel-button'].addEventListener('click', () => {
         state.cancelRequested = true;
         addEntry('Abbruch angefordert', 'Der aktuelle Schritt wird noch beendet.', 'skipped');
@@ -719,9 +731,20 @@
           return;
         }
 
+        if (!confirmLargeRun(images.length, settings)) {
+          addEntry('Abgebrochen', 'Der Komprimierungslauf wurde vor dem Start gestoppt.', 'skipped');
+          return;
+        }
+
+        const backupRunId = settings.createBackup ? createBackupRunId() : null;
+        if (backupRunId) {
+          await saveBackupMeta(backupRunId, images.length);
+          addEntry('Backup aktiv', 'Originalbilder werden lokal im Browser gesichert.', 'done');
+        }
+
         for (const image of images) {
           if (state.cancelRequested) break;
-          await compressExistingImage(image, settings);
+          await compressExistingImage(image, settings, backupRunId);
           renderAll();
           await wait(250);
         }
@@ -735,7 +758,7 @@
       }
     }
 
-    async function compressExistingImage(image, settings) {
+    async function compressExistingImage(image, settings, backupRunId) {
       const title = image.title?.trim() || `Bild ${image.id}`;
       try {
         const originalDataUrl = await image.getDataUrl('original');
@@ -754,6 +777,10 @@
           state.summary.skipped += 1;
           addEntry(title, `Schon klein genug (${formatBytes(result.originalBytes)} -> ${formatBytes(result.compressedBytes)}).`, 'skipped');
           return;
+        }
+
+        if (backupRunId) {
+          await saveBackupRecord(backupRunId, image, originalDataUrl);
         }
 
         image.url = result.dataUrl;
@@ -884,8 +911,21 @@
         outputMode: data.get('keepPng') === 'on' ? 'png-for-png' : 'jpeg',
         backgroundColor: '#ffffff',
         onlyIfSmaller: data.get('onlyIfSmaller') === 'on',
+        createBackup: data.get('createBackup') === 'on',
         rasterizeSpecial: data.get('rasterizeSpecial') === 'on',
       };
+    }
+
+    function confirmLargeRun(count, settings) {
+      if (count < 100 && settings.createBackup) return true;
+
+      const backupHint = settings.createBackup
+        ? 'Ein lokales Backup wird vorher angelegt. Das braucht bei vielen grossen Bildern zusaetzlichen Speicher.'
+        : 'Backup ist deaktiviert. Das ist schneller, aber riskanter.';
+
+      return window.confirm(
+        `Du bist dabei, ${count} Bilder zu bearbeiten.\n\n${backupHint}\n\nEmpfehlung: Bei Trainingsboards zuerst eine Board-Kopie testen.\n\nFortfahren?`
+      );
     }
 
     async function compressDataUrl(dataUrl, settings) {
@@ -1133,6 +1173,200 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+    }
+
+    function createBackupRunId() {
+      return `backup-${new Date().toISOString()}-${Math.random().toString(36).slice(2)}`;
+    }
+
+    function openBackupDb() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open('miro-bildkompressor-backups', 1);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains('runs')) {
+            db.createObjectStore('runs', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('items')) {
+            const store = db.createObjectStore('items', { keyPath: 'key' });
+            store.createIndex('runId', 'runId');
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error('Backup-Datenbank konnte nicht geoeffnet werden.'));
+      });
+    }
+
+    async function saveBackupMeta(runId, expectedCount) {
+      const db = await openBackupDb();
+      await dbPut(db, 'runs', {
+        id: runId,
+        createdAt: new Date().toISOString(),
+        expectedCount,
+        app: 'Miro Bildkompressor',
+        version: 1,
+      });
+      db.close();
+    }
+
+    async function saveBackupRecord(runId, image, dataUrl) {
+      const db = await openBackupDb();
+      await dbPut(db, 'items', {
+        key: `${runId}:${image.id}`,
+        runId,
+        itemId: image.id,
+        title: image.title || '',
+        url: dataUrl,
+        x: image.x,
+        y: image.y,
+        width: image.width,
+        height: image.height,
+        rotation: image.rotation,
+        savedAt: new Date().toISOString(),
+      });
+      db.close();
+    }
+
+    async function restoreLatestBackup() {
+      if (!hasMiro()) {
+        addEntry('Nur in Miro verfuegbar', 'Backups koennen nur aus einem Miro Board wiederhergestellt werden.', 'error');
+        renderAll();
+        return;
+      }
+
+      if (state.running) return;
+
+      try {
+        const latestRun = await getLatestBackupRun();
+        if (!latestRun) {
+          addEntry('Kein Backup gefunden', 'Es gibt noch kein lokales Backup in diesem Browser.', 'skipped');
+          renderAll();
+          return;
+        }
+
+        const records = await getBackupRecords(latestRun.id);
+        if (records.length === 0) {
+          addEntry('Backup leer', 'Dieses Backup enthaelt keine Bilddaten.', 'skipped');
+          renderAll();
+          return;
+        }
+
+        const ok = window.confirm(
+          `Letztes Backup vom ${new Date(latestRun.createdAt).toLocaleString()} wiederherstellen?\n\n${records.length} Bilder werden zurueckgesetzt oder neu erstellt.`
+        );
+        if (!ok) return;
+
+        startRun();
+        state.summary.total = records.length;
+        renderAll();
+
+        for (const record of records) {
+          if (state.cancelRequested) break;
+          await restoreBackupRecord(record);
+          renderAll();
+          await wait(250);
+        }
+
+        notify(`Backup wiederhergestellt: ${state.summary.done} Bilder.`);
+      } catch (error) {
+        state.summary.failed += 1;
+        addEntry('Restore fehlgeschlagen', messageFrom(error), 'error');
+      } finally {
+        finishRun();
+      }
+    }
+
+    async function restoreBackupRecord(record) {
+      try {
+        const existing = await getBoardItemById(record.itemId);
+        if (existing && isImageItem(existing)) {
+          existing.url = record.url;
+          await existing.sync();
+          state.summary.done += 1;
+          addEntry(record.title || record.itemId, 'Originalbild wurde auf bestehendem Item wiederhergestellt.', 'done');
+          return;
+        }
+
+        await window.miro.board.createImage({
+          title: record.title || 'Wiederhergestelltes Bild',
+          url: record.url,
+          x: Number.isFinite(record.x) ? record.x : 0,
+          y: Number.isFinite(record.y) ? record.y : 0,
+          width: Number.isFinite(record.width) ? record.width : undefined,
+        });
+        state.summary.done += 1;
+        addEntry(record.title || record.itemId, 'Originalbild wurde neu erstellt.', 'done');
+      } catch (error) {
+        state.summary.failed += 1;
+        addEntry(record.title || record.itemId, messageFrom(error), 'error');
+      }
+    }
+
+    async function getBoardItemById(itemId) {
+      if (typeof window.miro.board.getById === 'function') {
+        return window.miro.board.getById(itemId);
+      }
+      const items = await window.miro.board.get({ id: itemId });
+      return items[0] || null;
+    }
+
+    async function getLatestBackupRun() {
+      const db = await openBackupDb();
+      const runs = await dbGetAll(db, 'runs');
+      db.close();
+      return runs.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0] || null;
+    }
+
+    async function getBackupRecords(runId) {
+      const db = await openBackupDb();
+      const records = await new Promise((resolve, reject) => {
+        const tx = db.transaction('items', 'readonly');
+        const index = tx.objectStore('items').index('runId');
+        const request = index.getAll(runId);
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error || new Error('Backup konnte nicht gelesen werden.'));
+      });
+      db.close();
+      return records;
+    }
+
+    async function clearBackups() {
+      if (state.running) return;
+      const ok = window.confirm('Alle lokalen Bildkompressor-Backups in diesem Browser loeschen?');
+      if (!ok) return;
+
+      const db = await openBackupDb();
+      await dbClear(db, 'items');
+      await dbClear(db, 'runs');
+      db.close();
+      addEntry('Backups geloescht', 'Lokale Backups dieses Browsers wurden entfernt.', 'done');
+      renderAll();
+    }
+
+    function dbPut(db, storeName, value) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(storeName, 'readwrite');
+        tx.objectStore(storeName).put(value);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error || new Error('Backup konnte nicht gespeichert werden.'));
+      });
+    }
+
+    function dbGetAll(db, storeName) {
+      return new Promise((resolve, reject) => {
+        const request = db.transaction(storeName, 'readonly').objectStore(storeName).getAll();
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error || new Error('Backup konnte nicht gelesen werden.'));
+      });
+    }
+
+    function dbClear(db, storeName) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(storeName, 'readwrite');
+        tx.objectStore(storeName).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error || new Error('Backup konnte nicht geloescht werden.'));
+      });
     }
   </script>
 </body>
