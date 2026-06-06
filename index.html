@@ -553,6 +553,10 @@
     .share-fill { display: block; height: 100%; border-radius: inherit; background: var(--primary); }
     .share-val { min-width: 34px; color: #3f4d5f; font-size: 12px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
 
+    .tab-button.tab-wide { grid-column: 1 / -1; }
+    .embed-item strong { display: block; overflow-wrap: anywhere; color: var(--text); font-size: 13px; }
+    .embed-item span { display: block; margin-top: 2px; overflow-wrap: anywhere; color: var(--muted); font-size: 12px; }
+
     .hidden {
       display: none !important;
     }
@@ -586,6 +590,7 @@
       <button id="tab-upload" class="tab-button" type="button">Vor Einfuegen</button>
       <button id="tab-audit" class="tab-button" type="button">Board-Audit</button>
       <button id="tab-env" class="tab-button" type="button">Umgebung</button>
+      <button id="tab-embed" class="tab-button tab-wide" type="button">Embed → Link</button>
     </nav>
 
     <section class="metrics" aria-live="polite">
@@ -691,6 +696,24 @@
         <div id="env-results" class="stack"></div>
       </section>
 
+      <section id="embed-panel" class="stack hidden">
+        <p class="lead">Wandelt <b>markierte Embeds</b> in breite Sticky Notes mit Titel + klickbarem Link um und entfernt das Original. Embeds sind der schwerste Typ (mult 2,0, Live-iFrame) – ein Link ist ein Primitiv (1,0) und laedt nichts nach. Tipp: im Tab „Board-Audit" auf Embeds „Markieren", dann hier umwandeln.</p>
+        <form id="embed-settings" class="card settings">
+          <label class="check-row">
+            <input id="embed-backup" name="embedBackup" type="checkbox" checked />
+            <span>Backup vor dem Entfernen lokal sichern (macht die Umwandlung rueckgaengig)</span>
+          </label>
+        </form>
+        <div class="actions">
+          <button id="embed-refresh-button" class="button secondary" type="button">Auswahl pruefen</button>
+          <button id="embed-convert-button" class="button primary" type="button">Umwandeln</button>
+        </div>
+        <div class="actions">
+          <button id="embed-restore-button" class="button secondary" type="button">Letzte Umwandlung rueckgaengig</button>
+        </div>
+        <div id="embed-results" class="stack"></div>
+      </section>
+
       <div id="cancel-row" class="actions">
         <button id="cancel-button" class="button secondary" type="button" disabled>Abbrechen</button>
       </div>
@@ -727,6 +750,7 @@
       entries: [],
       audit: null,
       env: null,
+      embeds: null,
     };
 
     const els = {};
@@ -741,14 +765,15 @@
 
     function cacheElements() {
       for (const id of [
-        'connection', 'connection-label', 'tab-board', 'tab-upload', 'tab-audit', 'tab-env',
+        'connection', 'connection-label', 'tab-board', 'tab-upload', 'tab-audit', 'tab-env', 'tab-embed',
         'metric-selection', 'metric-done', 'metric-saved', 'settings-form', 'scope-fieldset',
         'quality-input', 'quality-output',
-        'board-panel', 'upload-panel', 'audit-panel', 'env-panel',
+        'board-panel', 'upload-panel', 'audit-panel', 'env-panel', 'embed-panel',
         'refresh-button', 'compress-board-button', 'restore-backup-button', 'clear-backups-button',
         'drop-zone', 'file-input', 'clear-files-button', 'insert-files-button', 'file-list',
         'run-audit-button', 'focus-selection-button', 'audit-results',
         'run-env-button', 'copy-env-button', 'env-results',
+        'embed-backup', 'embed-refresh-button', 'embed-convert-button', 'embed-restore-button', 'embed-results',
         'cancel-row', 'cancel-button', 'progress-card', 'progress-label', 'progress-percent',
         'progress-fill', 'summary-skipped', 'summary-failed', 'log-section', 'log-list',
       ]) {
@@ -761,6 +786,7 @@
       els['tab-upload'].addEventListener('click', () => setMode('upload'));
       els['tab-audit'].addEventListener('click', () => setMode('audit'));
       els['tab-env'].addEventListener('click', () => setMode('env'));
+      els['tab-embed'].addEventListener('click', () => setMode('embed'));
       els['refresh-button'].addEventListener('click', refreshSelectionCount);
       els['compress-board-button'].addEventListener('click', () => runBoardCompression(readSettings()));
       els['restore-backup-button'].addEventListener('click', restoreLatestBackup);
@@ -769,6 +795,9 @@
       els['focus-selection-button'].addEventListener('click', focusSelection);
       els['run-env-button'].addEventListener('click', runEnvCheck);
       els['copy-env-button'].addEventListener('click', copyEnvReport);
+      els['embed-refresh-button'].addEventListener('click', refreshEmbedSelection);
+      els['embed-convert-button'].addEventListener('click', convertSelectedEmbeds);
+      els['embed-restore-button'].addEventListener('click', restoreLatestEmbedRun);
       els['cancel-button'].addEventListener('click', () => {
         state.cancelRequested = true;
         addEntry('Abbruch angefordert', 'Der aktuelle Schritt wird noch beendet.', 'skipped');
@@ -1203,22 +1232,25 @@
       const processed = state.summary.done + state.summary.skipped + state.summary.failed;
       const percent = state.summary.total > 0 ? Math.round((processed / state.summary.total) * 100) : 0;
       const isCompress = state.mode === 'board' || state.mode === 'upload';
+      const isRunPanel = isCompress || state.mode === 'embed';
 
       els['tab-board'].classList.toggle('active', state.mode === 'board');
       els['tab-upload'].classList.toggle('active', state.mode === 'upload');
       els['tab-audit'].classList.toggle('active', state.mode === 'audit');
       els['tab-env'].classList.toggle('active', state.mode === 'env');
+      els['tab-embed'].classList.toggle('active', state.mode === 'embed');
 
       els['board-panel'].classList.toggle('hidden', state.mode !== 'board');
       els['upload-panel'].classList.toggle('hidden', state.mode !== 'upload');
       els['audit-panel'].classList.toggle('hidden', state.mode !== 'audit');
       els['env-panel'].classList.toggle('hidden', state.mode !== 'env');
+      els['embed-panel'].classList.toggle('hidden', state.mode !== 'embed');
 
       els['settings-form'].classList.toggle('hidden', !isCompress);
       els['scope-fieldset'].classList.toggle('hidden', state.mode !== 'board');
-      els['cancel-row'].classList.toggle('hidden', !isCompress);
-      els['progress-card'].classList.toggle('hidden', !isCompress);
-      els['log-section'].classList.toggle('hidden', !isCompress);
+      els['cancel-row'].classList.toggle('hidden', !isRunPanel);
+      els['progress-card'].classList.toggle('hidden', !isRunPanel);
+      els['log-section'].classList.toggle('hidden', !isRunPanel);
 
       els['metric-selection'].textContent = String(state.selectedCount);
       els['metric-done'].textContent = String(state.summary.done);
@@ -1242,6 +1274,7 @@
       renderLog();
       renderAudit();
       renderEnv();
+      renderEmbedPanel();
     }
 
     function renderFiles() {
@@ -1881,6 +1914,325 @@
       }
     }
 
+    /* ----------------------- M6 · Embed -> Link ------------------------ */
+
+    function domainOf(url) {
+      try {
+        return new URL(url).hostname.replace(/^www\./, '');
+      } catch {
+        return '';
+      }
+    }
+
+    function embedLabel(embed) {
+      const title = (embed.title || '').trim();
+      return title || embed.providerName || domainOf((embed.url || '').trim()) || (embed.url || '').trim() || 'Link';
+    }
+
+    // Wiederholt eine Operation bei Rate-Limit-Fehlern (429) mit exponentiellem Backoff.
+    async function withBackoff(fn) {
+      const delays = [400, 900, 1800, 3500];
+      let lastError;
+      for (let attempt = 0; attempt <= delays.length; attempt += 1) {
+        try {
+          return await fn();
+        } catch (error) {
+          lastError = error;
+          const msg = String(error?.message || error).toLowerCase();
+          const rateLimited = msg.includes('429') || msg.includes('too many') || msg.includes('rate limit');
+          if (!rateLimited || attempt === delays.length) throw error;
+          await wait(delays[attempt]);
+        }
+      }
+      throw lastError;
+    }
+
+    async function refreshEmbedSelection() {
+      if (!hasMiro()) {
+        state.embeds = { error: 'Nur in Miro verfuegbar – App aus einem Board starten.' };
+        renderAll();
+        return;
+      }
+      state.busy = true;
+      renderAll();
+      try {
+        const selection = await window.miro.board.getSelection();
+        const list = selection
+          .filter((i) => i?.type === 'embed')
+          .map((e) => ({ id: e.id, label: embedLabel(e), url: (e.url || '').trim() }));
+        state.embeds = { list };
+      } catch (error) {
+        state.embeds = { error: messageFrom(error) };
+      } finally {
+        state.busy = false;
+        renderAll();
+      }
+    }
+
+    function renderEmbedPanel() {
+      const box = els['embed-results'];
+      if (!box) return;
+      const e = state.embeds;
+
+      if (!e) {
+        box.innerHTML = '<div class="empty">Markiere Embeds auf dem Board und tippe auf „Auswahl pruefen".</div>';
+        return;
+      }
+      if (e.error) {
+        box.innerHTML = `<div class="empty">${escapeHtml(e.error)}</div>`;
+        return;
+      }
+      if (!e.list || e.list.length === 0) {
+        box.innerHTML = '<div class="empty">Keine Embeds in der Auswahl. Im Tab „Board-Audit" lassen sie sich markieren.</div>';
+        return;
+      }
+
+      box.innerHTML = `
+        <p class="subhead">${e.list.length} Embed(s) in der Auswahl</p>
+        <ul class="count-list">
+          ${e.list.map((it) => `
+            <li class="flag-row embed-item">
+              <div>
+                <strong>${escapeHtml(it.label)}</strong>
+                <span>${it.url ? escapeHtml(it.url) : 'URL per SDK nicht auslesbar – wird uebersprungen'}</span>
+              </div>
+            </li>`).join('')}
+        </ul>
+        <p class="lead">„Umwandeln" erstellt je Embed eine breite Sticky Note mit Titel + Link und entfernt das Original.</p>`;
+    }
+
+    function readEmbedSettings() {
+      return { createBackup: !!(els['embed-backup'] && els['embed-backup'].checked) };
+    }
+
+    async function convertSelectedEmbeds() {
+      if (!hasMiro()) {
+        resetRun(0);
+        addEntry('Nur in Miro verfuegbar', 'Die Umwandlung braucht ein Miro Board.', 'error');
+        state.summary.failed = 1;
+        renderAll();
+        return;
+      }
+
+      const settings = readEmbedSettings();
+      let embeds;
+      try {
+        const selection = await window.miro.board.getSelection();
+        embeds = selection.filter((i) => i?.type === 'embed');
+      } catch (error) {
+        resetRun(0);
+        addEntry('Auswahl nicht lesbar', messageFrom(error), 'error');
+        renderAll();
+        return;
+      }
+
+      if (embeds.length === 0) {
+        resetRun(0);
+        addEntry('Keine Embeds ausgewaehlt', 'Markiere zuerst Embeds auf dem Board.', 'skipped');
+        state.summary.skipped = 1;
+        renderAll();
+        return;
+      }
+
+      const backupHint = settings.createBackup
+        ? 'Ein lokales Backup wird angelegt – die Umwandlung ist ueber „Rueckgaengig" reversibel.'
+        : 'Backup ist AUS. Die Originale werden ohne Wiederherstellungsmoeglichkeit entfernt.';
+      const ok = window.confirm(
+        `${embeds.length} Embed(s) in breite Sticky Notes mit Link umwandeln und die Originale entfernen?\n\n${backupHint}\n\nEmpfehlung: bei Trainingsboards zuerst an einer Kopie testen.\n\nFortfahren?`
+      );
+      if (!ok) return;
+
+      startRun();
+      state.summary.total = embeds.length;
+      renderAll();
+
+      try {
+        const backupRunId = settings.createBackup ? createBackupRunId() : null;
+        if (backupRunId) {
+          await saveEmbedBackupMeta(backupRunId, embeds.length);
+          addEntry('Backup aktiv', 'Originale werden lokal im Browser gesichert.', 'done');
+        }
+
+        for (const embed of embeds) {
+          if (state.cancelRequested) break;
+          await convertOneEmbed(embed, backupRunId);
+          renderAll();
+          await wait(400);
+        }
+
+        notify(`Fertig: ${state.summary.done} Embed(s) in Links umgewandelt.`);
+      } catch (error) {
+        state.summary.failed += 1;
+        addEntry('Lauf gestoppt', messageFrom(error), 'error');
+      } finally {
+        finishRun();
+        state.embeds = null;
+      }
+    }
+
+    async function convertOneEmbed(embed, backupRunId) {
+      const label = embedLabel(embed);
+      const url = (embed.url || '').trim();
+      try {
+        if (!url) {
+          state.summary.skipped += 1;
+          addEntry(label, 'URL per SDK nicht auslesbar – Embed bleibt unveraendert (bitte manuell).', 'skipped');
+          return;
+        }
+
+        const width = clamp(Number(embed.width) || 360, 220, 1200);
+        const content = `<p><a href="${escapeHtml(url)}">${escapeHtml(label)}</a></p><p>${escapeHtml(url)}</p>`;
+
+        const sticky = await withBackoff(() => window.miro.board.createStickyNote({
+          content,
+          shape: 'rectangle',
+          x: Number.isFinite(embed.x) ? embed.x : 0,
+          y: Number.isFinite(embed.y) ? embed.y : 0,
+          width,
+          style: { fillColor: 'light_blue' },
+        }));
+
+        if (backupRunId) {
+          await saveEmbedBackupRecord(backupRunId, embed, sticky?.id || null);
+        }
+
+        await withBackoff(() => window.miro.board.remove(embed));
+
+        state.summary.done += 1;
+        state.summary.savedBytes += 0;
+        addEntry(label, `Embed → breite Sticky mit Link.${backupRunId ? '' : ' (ohne Backup)'}`, 'done');
+      } catch (error) {
+        state.summary.failed += 1;
+        addEntry(label, messageFrom(error), 'error');
+      }
+    }
+
+    async function saveEmbedBackupMeta(runId, expectedCount) {
+      const db = await openBackupDb();
+      await dbPut(db, 'runs', {
+        id: runId,
+        kind: 'embed',
+        createdAt: new Date().toISOString(),
+        expectedCount,
+        app: 'Miro Board-Werkzeug',
+        version: 1,
+      });
+      db.close();
+    }
+
+    async function saveEmbedBackupRecord(runId, embed, newStickyId) {
+      const db = await openBackupDb();
+      await dbPut(db, 'items', {
+        key: `${runId}:${embed.id}`,
+        runId,
+        kind: 'embed',
+        itemId: embed.id,
+        title: embed.title || '',
+        url: embed.url || '',
+        previewUrl: embed.previewUrl || '',
+        providerName: embed.providerName || '',
+        x: embed.x,
+        y: embed.y,
+        width: embed.width,
+        height: embed.height,
+        rotation: embed.rotation,
+        newStickyId,
+        savedAt: new Date().toISOString(),
+      });
+      db.close();
+    }
+
+    async function getLatestRunByKind(kind) {
+      const db = await openBackupDb();
+      const runs = await dbGetAll(db, 'runs');
+      db.close();
+      return runs
+        .filter((r) => (r.kind || 'image') === kind)
+        .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0] || null;
+    }
+
+    async function restoreLatestEmbedRun() {
+      if (!hasMiro()) {
+        addEntry('Nur in Miro verfuegbar', 'Wiederherstellung braucht ein Miro Board.', 'error');
+        renderAll();
+        return;
+      }
+      if (state.running) return;
+
+      try {
+        const run = await getLatestRunByKind('embed');
+        if (!run) {
+          addEntry('Keine Umwandlung gefunden', 'Es gibt kein Embed-Backup in diesem Browser.', 'skipped');
+          renderAll();
+          return;
+        }
+
+        const records = await getBackupRecords(run.id);
+        if (records.length === 0) {
+          addEntry('Backup leer', 'Dieses Backup enthaelt keine Embed-Daten.', 'skipped');
+          renderAll();
+          return;
+        }
+
+        const ok = window.confirm(
+          `Letzte Umwandlung vom ${new Date(run.createdAt).toLocaleString()} rueckgaengig machen?\n\n${records.length} Embed(s) werden wieder erstellt und die ersetzenden Sticky Notes entfernt.`
+        );
+        if (!ok) return;
+
+        startRun();
+        state.summary.total = records.length;
+        renderAll();
+
+        for (const record of records) {
+          if (state.cancelRequested) break;
+          await restoreEmbedRecord(record);
+          renderAll();
+          await wait(400);
+        }
+
+        notify(`Rueckgaengig: ${state.summary.done} Embed(s) wiederhergestellt.`);
+      } catch (error) {
+        state.summary.failed += 1;
+        addEntry('Rueckgaengig fehlgeschlagen', messageFrom(error), 'error');
+      } finally {
+        finishRun();
+      }
+    }
+
+    async function restoreEmbedRecord(record) {
+      const label = record.title || domainOf(record.url) || record.itemId;
+      try {
+        if (!record.url) {
+          state.summary.skipped += 1;
+          addEntry(label, 'Keine URL im Backup – Embed kann nicht wiederhergestellt werden.', 'skipped');
+          return;
+        }
+
+        await withBackoff(() => window.miro.board.createEmbed({
+          url: record.url,
+          previewUrl: record.previewUrl || undefined,
+          x: Number.isFinite(record.x) ? record.x : 0,
+          y: Number.isFinite(record.y) ? record.y : 0,
+          width: Number.isFinite(record.width) ? record.width : undefined,
+        }));
+
+        if (record.newStickyId) {
+          try {
+            const sticky = await getBoardItemById(record.newStickyId);
+            if (sticky) await withBackoff(() => window.miro.board.remove(sticky));
+          } catch {
+            // Sticky bereits entfernt – ignorieren.
+          }
+        }
+
+        state.summary.done += 1;
+        addEntry(label, 'Embed wiederhergestellt, Ersatz-Sticky entfernt.', 'done');
+      } catch (error) {
+        state.summary.failed += 1;
+        addEntry(label, messageFrom(error), 'error');
+      }
+    }
+
     /* --------------------------- gemeinsam ----------------------------- */
 
     function isImageItem(item) {
@@ -2066,7 +2418,9 @@
       const db = await openBackupDb();
       const runs = await dbGetAll(db, 'runs');
       db.close();
-      return runs.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0] || null;
+      return runs
+        .filter((r) => (r.kind || 'image') !== 'embed')
+        .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0] || null;
     }
 
     async function getBackupRecords(runId) {
