@@ -93,6 +93,11 @@ Board-Kopie in Miro anlegen.
 - Content-Security-Policy als Meta-Tag gesetzt.
 - Details: [PRIVACY.md](PRIVACY.md).
 
+## Dokumentation
+
+- Überblick (Why · How · What): [docs/ueberblick.md](docs/ueberblick.md)
+- Technische Doku (Entwickler & LLMs): [docs/technische-doku.md](docs/technische-doku.md)
+
 ## Marketplace
 
 Vorbereitete Listing-Inhalte: [docs/marketplace-listing.md](docs/marketplace-listing.md).
