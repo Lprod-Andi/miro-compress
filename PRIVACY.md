@@ -8,10 +8,8 @@ beschreibt, welche Daten dabei verarbeitet werden.
 
 ## Verantwortlich
 
-> _Bitte vor Veröffentlichung ausfüllen:_
->
-> - **Anbieter:** `<Name / Firma>`
-> - **Kontakt / Support:** `<Support-E-Mail>`
+- **Anbieter:** Andreas Lindenberg
+- **Kontakt / Support:** andreas@lindenberg.dev
 
 ## Kurzfassung
 
