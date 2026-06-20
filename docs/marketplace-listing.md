@@ -17,7 +17,7 @@ Dashboard-Maske anpassen.
 | **Berechtigungen** | `boards:read`, `boards:write` |
 | **Hosting / sdkUri** | https://lprod-andi.github.io/miro-compress/ |
 | **Datenschutz-URL** | Link zu `PRIVACY.md` (z. B. GitHub-Raw oder eigene Seite) |
-| **Support-Kontakt** | `<Support-E-Mail eintragen>` |
+| **Support-Kontakt** | andreas@lindenberg.dev |
 
 ## Kurzbeschreibung (für die Übersicht, ~max. 250 Zeichen)
 
@@ -84,6 +84,6 @@ Empfohlen 3–5 Screenshots, Panel-Breite (~ 320–400 px Inhalt):
 
 - [ ] `app-manifest.yaml`: `appName: Image Compress`, korrekte `sdkUri`
 - [ ] Datenschutz-URL erreichbar
-- [ ] Support-E-Mail eingetragen (Manifest/Listing + `PRIVACY.md`)
+- [x] Support-E-Mail eingetragen (andreas@lindenberg.dev) – Listing + `PRIVACY.md`
 - [ ] Test in einem echten Board: Icon erscheint, Panel öffnet, alle Tabs laufen
 - [ ] `.env` mit Secrets ist **nicht** deployed (nur lokal)
