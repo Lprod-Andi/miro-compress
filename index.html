@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -754,36 +754,36 @@
   <main class="app">
     <header class="topbar">
       <div>
-        <p class="eyebrow">Miro · Board-Optimierung</p>
+        <p class="eyebrow">Miro · Board optimization</p>
         <h1>Image Compress</h1>
       </div>
       <div id="connection" class="status-pill">
         <span class="status-dot"></span>
-        <span id="connection-label">Lokal</span>
+        <span id="connection-label">Local</span>
       </div>
     </header>
 
-    <nav class="tabs" aria-label="Bereich">
+    <nav class="tabs" aria-label="Area">
       <button id="grp-analyse" class="tab-button active" type="button">
-        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.6-3.6"/></svg></span>Analyse
+        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.6-3.6"/></svg></span>Analyze
       </button>
       <button id="grp-optimierung" class="tab-button" type="button">
-        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L5 13h5l-1 8 8-10h-5z"/></svg></span>Optimierung
+        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L5 13h5l-1 8 8-10h-5z"/></svg></span>Optimize
       </button>
     </nav>
 
-    <nav id="subtabs-analyse" class="tabs subtabs" aria-label="Analyse-Werkzeuge">
+    <nav id="subtabs-analyse" class="tabs subtabs" aria-label="Analysis tools">
       <button id="tab-audit" class="tab-button sub active" type="button">
-        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M10 20V5M15 20v-7M20 20v-12"/></svg></span>Board-Audit
+        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M10 20V5M15 20v-7M20 20v-12"/></svg></span>Board Audit
       </button>
       <button id="tab-info" class="tab-button sub" type="button">
         <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg></span>Info
       </button>
     </nav>
 
-    <nav id="subtabs-optimierung" class="tabs subtabs hidden" aria-label="Optimierungs-Werkzeuge">
+    <nav id="subtabs-optimierung" class="tabs subtabs hidden" aria-label="Optimization tools">
       <button id="tab-board" class="tab-button sub" type="button">
-        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-4-6 6"/></svg></span>Bilder
+        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-4-6 6"/></svg></span>Images
       </button>
       <button id="tab-embed" class="tab-button sub" type="button">
         <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 8l-4 4 4 4"/><path d="M15 8l4 4-4 4"/></svg></span>Embeds
@@ -792,11 +792,11 @@
 
     <section id="metrics" class="metrics hidden" aria-live="polite">
       <div class="metric">
-        <span>Bearbeitet</span>
+        <span>Processed</span>
         <strong id="metric-done">0</strong>
       </div>
       <div class="metric">
-        <span>Gespart</span>
+        <span>Saved</span>
         <strong id="metric-saved">0 B</strong>
       </div>
     </section>
@@ -804,19 +804,19 @@
     <section class="stack">
       <form id="settings-form" class="card settings hidden">
         <fieldset id="scope-fieldset" class="segmented">
-          <legend>Bereich</legend>
+          <legend>Scope</legend>
           <label>
             <input type="radio" name="scope" value="selection" checked />
-            <span>Auswahl</span>
+            <span>Selection</span>
           </label>
           <label>
             <input type="radio" name="scope" value="board" />
-            <span>Ganzes Board</span>
+            <span>Entire board</span>
           </label>
         </fieldset>
 
         <fieldset id="size-fieldset" class="segmented cols-3">
-          <legend>Groesse</legend>
+          <legend>Size</legend>
           <label>
             <input type="radio" name="sizePreset" value="xs" />
             <span>XS</span>
@@ -832,23 +832,23 @@
         </fieldset>
 
         <details class="advanced">
-          <summary>Erweitert</summary>
+          <summary>Advanced</summary>
           <label class="field">
-            <span>JPEG-Qualitaet</span>
+            <span>JPEG quality</span>
             <input id="quality-input" name="quality" type="range" min="45" max="92" step="1" value="70" />
             <output id="quality-output">70%</output>
           </label>
           <label class="check-row">
             <input name="onlyIfSmaller" type="checkbox" checked />
-            <span>Nur ersetzen wenn kleiner</span>
+            <span>Only replace if smaller</span>
           </label>
           <label class="check-row">
             <input name="keepPng" type="checkbox" />
-            <span>PNG als PNG behalten</span>
+            <span>Keep PNG as PNG</span>
           </label>
           <label class="check-row">
             <input name="rasterizeSpecial" type="checkbox" />
-            <span>GIF/SVG trotzdem rasterisieren</span>
+            <span>Rasterize GIF/SVG anyway</span>
           </label>
         </details>
 
@@ -856,93 +856,93 @@
           <summary>Backup</summary>
           <label class="check-row">
             <input id="auto-backup-toggle" type="checkbox" checked />
-            <span>Automatische Backups vor dem Ersetzen/Umwandeln</span>
+            <span>Automatic backups before replacing/converting</span>
           </label>
           <div class="actions">
-            <button id="backup-now-button" class="button secondary" type="button">Jetzt sichern</button>
-            <button id="restore-latest-button" class="button secondary" type="button">Wiederherstellen</button>
+            <button id="backup-now-button" class="button secondary" type="button">Back up now</button>
+            <button id="restore-latest-button" class="button secondary" type="button">Restore</button>
           </div>
           <div id="backup-results" class="stack"></div>
           <div id="backup-clear-row" class="actions hidden" style="grid-template-columns:1fr">
-            <button id="clear-backups-button" class="button secondary" type="button">Alle loeschen</button>
+            <button id="clear-backups-button" class="button secondary" type="button">Delete all</button>
           </div>
         </details>
       </form>
 
       <section id="board-panel" class="stack hidden">
         <div class="actions" style="grid-template-columns:1fr">
-          <button id="compress-board-button" class="button primary" type="button">Komprimieren</button>
+          <button id="compress-board-button" class="button primary" type="button">Compress</button>
         </div>
       </section>
 
       <section id="audit-panel" class="stack">
-        <p class="lead">Zaehlt alle Objekte auf dem Board, gleicht sie mit den Miro-Schwellen ab (ab ~1.000 spuerbar, unter 5.000 empfohlen) und markiert schwere Inhalte. Es wird nichts veraendert oder geloescht.</p>
+        <p class="lead">Counts every object on the board, compares them with Miro's thresholds (noticeable from ~1,000, recommended under 5,000) and flags heavy content. Nothing is changed or deleted.</p>
         <div class="actions" style="grid-template-columns:1fr">
-          <button id="run-audit-button" class="button primary" type="button">Board scannen</button>
+          <button id="run-audit-button" class="button primary" type="button">Scan board</button>
         </div>
         <div id="audit-focus-row" class="actions hidden">
-          <button id="focus-selection-button" class="button secondary" type="button">Auswahl anzeigen</button>
-          <button id="export-report-button" class="button primary" type="button">Bericht aufs Board</button>
+          <button id="focus-selection-button" class="button secondary" type="button">Show selection</button>
+          <button id="export-report-button" class="button primary" type="button">Report to board</button>
         </div>
         <div id="audit-results" class="stack"></div>
       </section>
 
       <section id="info-panel" class="stack hidden">
         <div class="card">
-          <p class="subhead" style="margin-top:0">Was bremst ein Miro-Board?</p>
-          <p class="lead">Kurz gesagt: zu viele und zu „schwere" Objekte. Der Browser muss alles gleichzeitig zeichnen, im Arbeitsspeicher halten und live mit allen Teilnehmenden synchronisieren. Je mehr und je aufwaendiger, desto traeger werden Laden, Zoomen und Bearbeiten.</p>
+          <p class="subhead" style="margin-top:0">What slows a Miro board down?</p>
+          <p class="lead">In short: too many and too "heavy" objects. The browser has to draw everything at once, keep it in memory and sync it live with all participants. The more, and the more complex, the slower loading, zooming and editing become.</p>
         </div>
         <div class="card">
-          <p class="subhead" style="margin-top:0">Die groessten Bremsen</p>
+          <p class="subhead" style="margin-top:0">The biggest bottlenecks</p>
           <ul class="count-list">
-            <li class="flag-row"><div><strong>Schiere Menge</strong><span>Ab ~1.000 Objekten wird es spuerbar, ueber 5.000 raet Miro ab. Jedes Objekt kostet Rechenzeit.</span></div></li>
-            <li class="flag-row"><div><strong>Embeds &amp; iFrames</strong><span>Laden eine komplette Webseite ins Board – der mit Abstand schwerste Typ.</span></div></li>
-            <li class="flag-row"><div><strong>Grosse, unkomprimierte Bilder</strong><span>Viele MB pro Bild fluten Speicher und Ladezeit.</span></div></li>
-            <li class="flag-row"><div><strong>Tabellen, Dokumente, Kanban, Timelines</strong><span>Komplexe Editoren, teuer beim Live-Sync.</span></div></li>
-            <li class="flag-row"><div><strong>Freihand-Striche &amp; Mockups</strong><span>Viele Vektorpunkte, aufwaendig zu rendern.</span></div></li>
-            <li class="flag-row"><div><strong>Riesige Boards &amp; Objekte ausserhalb von Frames</strong><span>Alles bleibt aktiv – auch was gerade niemand sieht.</span></div></li>
+            <li class="flag-row"><div><strong>Sheer volume</strong><span>Noticeable from ~1,000 objects; over 5,000 Miro advises against. Every object costs compute time.</span></div></li>
+            <li class="flag-row"><div><strong>Embeds &amp; iFrames</strong><span>Load a whole website into the board – by far the heaviest type.</span></div></li>
+            <li class="flag-row"><div><strong>Large, uncompressed images</strong><span>Many MB per image flood memory and load time.</span></div></li>
+            <li class="flag-row"><div><strong>Tables, documents, Kanban, timelines</strong><span>Complex editors, expensive during live sync.</span></div></li>
+            <li class="flag-row"><div><strong>Freehand strokes &amp; mockups</strong><span>Many vector points, expensive to render.</span></div></li>
+            <li class="flag-row"><div><strong>Huge boards &amp; objects outside frames</strong><span>Everything stays active – even what no one is looking at.</span></div></li>
           </ul>
         </div>
         <div class="card">
-          <p class="subhead" style="margin-top:0">Was ausserdem zaehlt</p>
-          <p class="lead">Schwache Grafik/wenig RAM, ein alter Browser (empfohlen: aktueller Chrome oder Edge), eine langsame oder instabile Verbindung sowie viele offene Tabs oder parallele Videocalls bremsen zusaetzlich.</p>
+          <p class="subhead" style="margin-top:0">What else matters</p>
+          <p class="lead">Weak graphics/low RAM, an old browser (recommended: current Chrome or Edge), a slow or unstable connection, plus many open tabs or parallel video calls slow things down further.</p>
         </div>
         <div class="card">
-          <p class="subhead" style="margin-top:0">Was hilft</p>
-          <p class="lead">Bilder verkleinern (Reiter „Bilder"), Embeds in Links umwandeln (Reiter „Embeds"), nicht mehr Benoetigtes archivieren, Inhalte in Frames ordnen und sehr grosse Boards aufteilen. Backups gibt es im Bilder-Tab unter „Backup".</p>
+          <p class="subhead" style="margin-top:0">What helps</p>
+          <p class="lead">Shrink images (Images tab), convert embeds to links (Embeds tab), archive what you no longer need, organize content into frames and split very large boards. Backups are in the Images tab under "Backup".</p>
         </div>
         <div class="card">
           <p class="subhead" style="margin-top:0">Backups</p>
-          <p class="lead">Backups liegen nur lokal in diesem Browser (IndexedDB) auf diesem Geraet. Anderer Browser oder Rechner, Inkognito-Modus oder geloeschte Browserdaten = kein Zugriff mehr. Fuer wichtige Staende zusaetzlich eine Board-Kopie in Miro anlegen.</p>
+          <p class="lead">Backups live only locally in this browser (IndexedDB) on this device. A different browser or computer, incognito mode or cleared browser data = no more access. For important states, also keep a board copy in Miro.</p>
         </div>
       </section>
 
       <section id="embed-panel" class="stack hidden">
-        <p class="lead">Markierte Embeds → Sticky Note mit Link.</p>
+        <p class="lead">Selected embeds → sticky note with link.</p>
         <div class="actions" style="grid-template-columns:1fr">
-          <button id="embed-convert-button" class="button primary" type="button">Umwandeln</button>
+          <button id="embed-convert-button" class="button primary" type="button">Convert</button>
         </div>
         <div class="actions" style="grid-template-columns:1fr">
-          <button id="embed-restore-button" class="button secondary" type="button">Rueckgaengig</button>
+          <button id="embed-restore-button" class="button secondary" type="button">Undo</button>
         </div>
         <div id="embed-results" class="stack"></div>
       </section>
 
       <div id="cancel-row" class="actions hidden">
-        <button id="cancel-button" class="button secondary" type="button" disabled>Abbrechen</button>
+        <button id="cancel-button" class="button secondary" type="button" disabled>Cancel</button>
       </div>
 
       <section id="progress-card" class="card hidden">
         <div class="progress-head">
-          <span id="progress-label">Bereit</span>
+          <span id="progress-label">Ready</span>
           <span id="progress-percent">0%</span>
         </div>
         <div class="progress-track">
           <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
         </div>
         <div class="summary-line">
-          <span id="summary-skipped">0 uebersprungen</span>
-          <span id="summary-failed">0 Fehler</span>
+          <span id="summary-skipped">0 skipped</span>
+          <span id="summary-failed">0 errors</span>
         </div>
       </section>
 
@@ -1082,7 +1082,7 @@
       els['clear-backups-button'].addEventListener('click', clearBackups);
       els['cancel-button'].addEventListener('click', () => {
         state.cancelRequested = true;
-        addEntry('Abbruch angefordert', 'Der aktuelle Schritt wird noch beendet.', 'skipped');
+        addEntry('Cancellation requested', 'The current step will still finish.', 'skipped');
         renderAll();
       });
       els['quality-input'].addEventListener('input', () => {
@@ -1109,7 +1109,7 @@
 
     function setConnection(connected) {
       els.connection.classList.toggle('connected', connected);
-      els['connection-label'].textContent = connected ? 'Miro' : 'Lokal';
+      els['connection-label'].textContent = connected ? 'Miro' : 'Local';
     }
 
     function setGroup(group) {
@@ -1167,7 +1167,7 @@
     async function runBoardCompression(settings) {
       if (!hasMiro()) {
         resetRun(0);
-        addEntry('Nur in Miro verfuegbar', 'Installiere die App im Board und starte sie dort.', 'error');
+        addEntry('Only available in Miro', 'Install the app in the board and start it there.', 'error');
         state.summary.failed = 1;
         renderAll();
         return;
@@ -1175,7 +1175,7 @@
 
       if (!(await checkLicense('compress'))) {
         resetRun(0);
-        addEntry('Funktion gesperrt', 'Die Bildkompression ist in dieser Version nicht freigeschaltet.', 'error');
+        addEntry('Feature locked', 'Image compression is not enabled in this version.', 'error');
         state.summary.failed = 1;
         renderAll();
         return;
@@ -1189,27 +1189,27 @@
             ? window.miro.board.getSelection()
             : window.miro.board.get({ type: 'image' }),
           60000,
-          'Zeitueberschreitung: Das Board hat nicht geantwortet. Bitte App schliessen, Board neu laden und erneut versuchen.'
+          'Timeout: the board did not respond. Please close the app, reload the board and try again.'
         );
         const images = items.filter(isImageItem);
         state.summary.total = images.length;
         renderAll();
 
         if (images.length === 0) {
-          addEntry('Keine Bilder gefunden', settings.scope === 'selection' ? 'Markiere Bilder auf dem Board und starte erneut.' : 'Auf dem Board wurden keine Bilder gefunden.', 'skipped');
+          addEntry('No images found', settings.scope === 'selection' ? 'Select images on the board and try again.' : 'No images were found on the board.', 'skipped');
           state.summary.skipped = 1;
           return;
         }
 
         if (!(await confirmLargeRun(images.length, settings))) {
-          addEntry('Abgebrochen', 'Der Komprimierungslauf wurde vor dem Start gestoppt.', 'skipped');
+          addEntry('Cancelled', 'The compression run was stopped before it started.', 'skipped');
           return;
         }
 
         const backupRunId = settings.createBackup ? createBackupRunId() : null;
         if (backupRunId) {
           await saveBackupMeta(backupRunId, images.length);
-          addEntry('Backup aktiv', 'Originalbilder werden lokal im Browser gesichert.', 'done');
+          addEntry('Backup active', 'Original images are saved locally in the browser.', 'done');
         }
 
         for (const image of images) {
@@ -1219,10 +1219,10 @@
           await wait(250);
         }
 
-        notify(`Fertig: ${state.summary.done} Bilder ersetzt, ${formatBytes(state.summary.savedBytes)} gespart.`);
+        notify(`Done: ${state.summary.done} images replaced, ${formatBytes(state.summary.savedBytes)} saved.`);
       } catch (error) {
         state.summary.failed += 1;
-        addEntry('Lauf gestoppt', messageFrom(error), 'error');
+        addEntry('Run stopped', messageFrom(error), 'error');
       } finally {
         finishRun();
       }
@@ -1236,7 +1236,7 @@
 
         if (!settings.rasterizeSpecial && shouldSkipMime(mime)) {
           state.summary.skipped += 1;
-          addEntry(title, `${mime} bleibt unveraendert.`, 'skipped');
+          addEntry(title, `${mime} left unchanged.`, 'skipped');
           return;
         }
 
@@ -1246,7 +1246,7 @@
         // die aus der URL allein nicht erkennbar waren.
         if (!settings.rasterizeSpecial && shouldSkipMime(result.sourceMime)) {
           state.summary.skipped += 1;
-          addEntry(title, `${result.sourceMime} bleibt unveraendert.`, 'skipped');
+          addEntry(title, `${result.sourceMime} left unchanged.`, 'skipped');
           return;
         }
 
@@ -1256,8 +1256,8 @@
         if (settings.onlyIfSmaller && (!knownOriginal || savedBytes <= 0)) {
           state.summary.skipped += 1;
           addEntry(title, knownOriginal
-            ? `Schon klein genug (${formatBytes(result.originalBytes)} -> ${formatBytes(result.compressedBytes)}).`
-            : 'Originalgroesse nicht ermittelbar – uebersprungen (Option „nur wenn kleiner").', 'skipped');
+            ? `Already small enough (${formatBytes(result.originalBytes)} -> ${formatBytes(result.compressedBytes)}).`
+            : 'Original size unknown – skipped (option "only if smaller").', 'skipped');
           return;
         }
 
@@ -1284,7 +1284,7 @@
       } catch (error) {
         state.summary.failed += 1;
         if (isQuotaError(error)) {
-          addEntry(title, 'Lokaler Backup-Speicher ist voll. Lauf gestoppt – „Backups loeschen" oder Backup deaktivieren und erneut starten.', 'error');
+          addEntry(title, 'Local backup storage is full. Run stopped – use "Delete all" or turn off backups and start again.', 'error');
           state.cancelRequested = true;
         } else {
           addEntry(title, messageFrom(error), 'error');
@@ -1312,19 +1312,19 @@
       if (count < 100 && settings.createBackup) return true;
 
       const backupHint = settings.createBackup
-        ? 'Ein lokales Backup wird vorher angelegt. Das braucht bei vielen grossen Bildern zusaetzlichen Speicher.'
-        : 'Backup ist deaktiviert. Das ist schneller, aber riskanter.';
+        ? 'A local backup is created first. With many large images this needs extra storage.'
+        : 'Backup is off. Faster, but riskier.';
 
       return confirmDialog({
-        title: `${count} Bilder bearbeiten?`,
-        message: `${backupHint}\n\nEmpfehlung: Bei Trainingsboards zuerst eine Board-Kopie testen.`,
-        confirmLabel: 'Komprimieren',
+        title: `Process ${count} images?`,
+        message: `${backupHint}\n\nTip: for training boards, test on a board copy first.`,
+        confirmLabel: 'Compress',
         danger: !settings.createBackup,
       });
     }
 
     function compressDataUrl(src, settings) {
-      return withTimeout(compressSourceInner(src, settings), 45000, 'Zeitueberschreitung bei der Bildverarbeitung.');
+      return withTimeout(compressSourceInner(src, settings), 45000, 'Timeout during image processing.');
     }
 
     async function compressSourceInner(src, settings) {
@@ -1338,7 +1338,7 @@
         canvas.height = target.height;
 
         const context = canvas.getContext('2d');
-        if (!context) throw new Error('Canvas konnte nicht initialisiert werden.');
+        if (!context) throw new Error('Canvas could not be initialized.');
 
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = 'high';
@@ -1355,7 +1355,7 @@
           compressedDataUrl = canvas.toDataURL(outputMime, settings.quality);
         } catch {
           // Tainted canvas: Quelle ist zugriffsgeschuetzt (CORS) und kann nicht ausgelesen werden.
-          throw new Error('Bild ist zugriffsgeschuetzt (CORS) und kann nicht komprimiert werden.');
+          throw new Error('Image is access-protected (CORS) and cannot be compressed.');
         }
 
         return {
@@ -1452,7 +1452,7 @@
         if (cors) image.crossOrigin = 'anonymous';
         image.decoding = 'async';
         image.onload = () => resolve(image);
-        image.onerror = () => reject(new Error('Bild konnte nicht geladen werden.'));
+        image.onerror = () => reject(new Error('Image could not be loaded.'));
         image.src = src;
       });
     }
@@ -1477,7 +1477,7 @@
 
     function getTargetSize(width, height, maxEdge) {
       if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
-        throw new Error('Ungueltige Bildgroesse.');
+        throw new Error('Invalid image size.');
       }
       const longestEdge = Math.max(width, height);
       const scale = Math.min(1, maxEdge / longestEdge);
@@ -1589,11 +1589,11 @@
 
       els['metric-done'].textContent = String(state.summary.done);
       els['metric-saved'].textContent = formatBytes(state.summary.savedBytes);
-      els['progress-label'].textContent = state.running ? `${processed}/${state.summary.total}` : state.summary.total > 0 ? 'Fertig' : 'Bereit';
+      els['progress-label'].textContent = state.running ? `${processed}/${state.summary.total}` : state.summary.total > 0 ? 'Done' : 'Ready';
       els['progress-percent'].textContent = `${percent}%`;
       els['progress-fill'].style.width = `${percent}%`;
-      els['summary-skipped'].textContent = `${state.summary.skipped} uebersprungen`;
-      els['summary-failed'].textContent = `${state.summary.failed} Fehler`;
+      els['summary-skipped'].textContent = `${state.summary.skipped} skipped`;
+      els['summary-failed'].textContent = `${state.summary.failed} errors`;
 
       const disabled = state.running || state.busy;
       for (const selector of ['button', 'input']) {
@@ -1613,7 +1613,7 @@
 
     function renderLog() {
       if (state.entries.length === 0) {
-        els['log-list'].innerHTML = '<li class="empty">Noch keine Aktion gestartet.</li>';
+        els['log-list'].innerHTML = '<li class="empty">No action started yet.</li>';
         return;
       }
 
@@ -1633,10 +1633,10 @@
     const OBJECT_THRESHOLD_SOFT = 1000;
     const OBJECT_THRESHOLD_MAX = 5000;
     const TYPE_LABELS = {
-      shape: 'Formen', sticky_note: 'Sticky Notes', text: 'Text', frame: 'Frames',
-      card: 'Cards', app_card: 'App Cards', image: 'Bilder', embed: 'Embeds',
-      connector: 'Verbindungen', group: 'Gruppen', table: 'Tabellen',
-      document: 'Dokumente', preview: 'Previews', mindmap_node: 'Mindmap',
+      shape: 'Shapes', sticky_note: 'Sticky notes', text: 'Text', frame: 'Frames',
+      card: 'Cards', app_card: 'App cards', image: 'Images', embed: 'Embeds',
+      connector: 'Connectors', group: 'Groups', table: 'Tables',
+      document: 'Documents', preview: 'Previews', mindmap_node: 'Mindmap',
       unsupported: 'Others', usm: 'USM', stencil: 'Stencil', emoji: 'Emoji',
     };
 
@@ -1703,7 +1703,7 @@
 
     async function runAudit() {
       if (!hasMiro()) {
-        state.audit = { error: 'Das Board-Audit braucht ein Miro Board. Starte die App aus einem Board heraus.' };
+        state.audit = { error: 'The board audit needs a Miro board. Start the app from within a board.' };
         renderAll();
         return;
       }
@@ -1716,7 +1716,7 @@
         const all = await withTimeout(
           window.miro.board.get(),
           60000,
-          'Zeitueberschreitung: Das Board hat nicht geantwortet (sehr gross oder Verbindungsproblem). Bitte App schliessen, Board neu laden und erneut versuchen.'
+          'Timeout: the board did not respond (very large or a connection issue). Please close the app, reload the board and try again.'
         );
         const counts = {};
         const frames = [];
@@ -1803,9 +1803,9 @@
     }
 
     function objectStatus(total) {
-      if (total >= OBJECT_THRESHOLD_MAX) return { cls: 'bad', text: 'ueber Empfehlung' };
-      if (total >= OBJECT_THRESHOLD_SOFT) return { cls: 'warn', text: 'kritischer Bereich' };
-      return { cls: 'ok', text: 'im gruenen Bereich' };
+      if (total >= OBJECT_THRESHOLD_MAX) return { cls: 'bad', text: 'over recommendation' };
+      if (total >= OBJECT_THRESHOLD_SOFT) return { cls: 'warn', text: 'critical range' };
+      return { cls: 'ok', text: 'in the green' };
     }
 
     // Gewichteter Lastindex + Aufteilung nach Last-Dimension (synchron vs. Lade/RAM).
@@ -1858,7 +1858,7 @@
       const a = state.audit;
 
       if (!a) {
-        box.innerHTML = '<div class="empty">Noch nicht gescannt. Tippe auf „Board scannen".</div>';
+        box.innerHTML = '<div class="empty">Not scanned yet. Tap "Scan board".</div>';
         return;
       }
       if (a.error) {
@@ -1866,7 +1866,7 @@
         return;
       }
       if (a.scanning) {
-        box.innerHTML = '<div class="empty">Board wird gescannt …</div>';
+        box.innerHTML = '<div class="empty">Scanning board …</div>';
         return;
       }
 
@@ -1876,8 +1876,8 @@
       const delta = a.total > 0 ? Math.round(((m.loadIndex - a.total) / a.total) * 100) : 0;
       const embedWeighted = Math.round(a.embeds.length * (TYPE_WEIGHTS.embed.mult));
       const indexNote = delta < 15
-        ? `Heute liegt der Index nur ${delta}% ueber der reinen Zahl – die vielen Primitive dominieren. Er zieht spuerbar an, sobald schwere Klassen (Embeds, Tabellen, Dokumente) ueber die Woche wachsen.`
-        : `Schwere Klassen heben den Index bereits ${delta}% ueber die reine Objektzahl – hier lohnt Entschlacken (Spur 2) mehr als reines Aufraeumen.`;
+        ? `Right now the index is only ${delta}% above the raw count – the many primitives dominate. It climbs noticeably once heavy classes (embeds, tables, documents) grow over time.`
+        : `Heavy classes already lift the index ${delta}% above the raw object count – here, slimming down pays off more than just tidying up.`;
 
       const dimBlock = (title, rows, trackText) => `
         <div class="card">
@@ -1887,7 +1887,7 @@
               <span class="share-label">${escapeHtml(typeLabel(r.type))}</span>
               <span class="share-track"><span class="share-fill" style="width:${r.share}%"></span></span>
               <span class="share-val">${r.share}%</span>
-            </div>`).join('') : '<p class="lead">Keine zuordenbaren Objekte.</p>'}
+            </div>`).join('') : '<p class="lead">No assignable objects.</p>'}
           <p class="lead">${trackText}</p>
         </div>`;
 
@@ -1901,73 +1901,73 @@
 
       let measureBlock;
       if (a.measuring) {
-        measureBlock = `<span class="badge warn"><span class="badge-dot"></span>misst ${a.measuring.done}/${a.measuring.total}</span>`;
+        measureBlock = `<span class="badge warn"><span class="badge-dot"></span>measuring ${a.measuring.done}/${a.measuring.total}</span>`;
       } else if (a.measured) {
         const top = biggest.slice(0, 3);
         measureBlock = `
-          ${top.length ? `<ul class="count-list" style="margin-top:6px">${top.map((i) => `<li class="count-row"><span class="count-label">${escapeHtml(i.title?.trim() || 'Bild')}</span><b>${formatBytes(i.__bytes)}</b></li>`).join('')}</ul>` : '<span class="lead">Keine Byte-Daten ermittelbar.</span>'}
+          ${top.length ? `<ul class="count-list" style="margin-top:6px">${top.map((i) => `<li class="count-row"><span class="count-label">${escapeHtml(i.title?.trim() || 'Image')}</span><b>${formatBytes(i.__bytes)}</b></li>`).join('')}</ul>` : '<span class="lead">No byte data available.</span>'}
           <div class="flag-actions" style="margin-top:6px">
-            ${top.length ? `<button class="mini-button" type="button" data-focus="biggest" ${dis}>Groesstes</button>` : ''}
-            <button class="mini-button" type="button" data-measure ${dis}>Neu messen</button>
+            ${top.length ? `<button class="mini-button" type="button" data-focus="biggest" ${dis}>Largest</button>` : ''}
+            <button class="mini-button" type="button" data-measure ${dis}>Re-measure</button>
           </div>`;
       } else {
         measureBlock = `
-          <span>Bytes pro Bild noch nicht gemessen.</span>
-          <div class="flag-actions"><button class="mini-button" type="button" data-measure ${dis}>Schwere messen</button></div>`;
+          <span>Bytes per image not measured yet.</span>
+          <div class="flag-actions"><button class="mini-button" type="button" data-measure ${dis}>Measure sizes</button></div>`;
       }
 
       box.innerHTML = `
         <div class="card">
           <div class="audit-total">
             <div>
-              <div class="num">${a.total.toLocaleString('de-DE')}</div>
-              <div class="lead">Objekte (ohne Tags)</div>
+              <div class="num">${a.total.toLocaleString('en-US')}</div>
+              <div class="lead">Objects (excl. tags)</div>
             </div>
             <span class="badge ${status.cls}"><span class="badge-dot"></span>${status.text}</span>
           </div>
           <div class="index-line">
-            <span>Gewichteter Lastindex <b>${m.loadIndex.toLocaleString('de-DE')}</b> (${delta >= 0 ? '+' : ''}${delta}% ggue. Zahl)</span>
+            <span>Weighted load index <b>${m.loadIndex.toLocaleString('en-US')}</b> (${delta >= 0 ? '+' : ''}${delta}% vs. count)</span>
           </div>
-          <p class="lead">Miro nennt spuerbare Effekte ab ~${OBJECT_THRESHOLD_SOFT.toLocaleString('de-DE')} und empfiehlt unter ${OBJECT_THRESHOLD_MAX.toLocaleString('de-DE')} Objekten. Die 1.000/5.000-Ampel ist zaehlbasiert; der Lastindex ist eine analytische Gewichtung (keine gemessenen Miro-Werte) zum Ranken.</p>
+          <p class="lead">Miro notes effects from ~${OBJECT_THRESHOLD_SOFT.toLocaleString('en-US')} objects and recommends staying under ${OBJECT_THRESHOLD_MAX.toLocaleString('en-US')}. The 1,000/5,000 indicator is count-based; the load index is an analytical weighting (not measured Miro values) for ranking.</p>
           <p class="lead">${indexNote}</p>
         </div>
 
-        ${dimBlock('Live-Sync-Risiko (Ruckeln in der Session)', m.syncTop,
-          'Treiber sind Tabellen/Kanban, Cards und Embeds. Hebel: Session-Verhalten + Editoren reduzieren (Spuren 3/6/10) – nicht Bilder verkleinern.')}
-        ${dimBlock('Lade- / RAM-Risiko (langsamer Start, „Syncing…")', m.loadTop,
-          'Treiber sind Embeds, Dokumente, Tabellen und Bilder. Hebel: flatten, Embeds zu Bookmarks, Bilder verkleinern (Spur 2).')}
+        ${dimBlock('Live-sync risk (lag during the session)', m.syncTop,
+          'Drivers are tables/Kanban, cards and embeds. Lever: reduce session behavior + editors – not shrinking images.')}
+        ${dimBlock('Load / RAM risk (slow start, "Syncing…")', m.loadTop,
+          'Drivers are embeds, documents, tables and images. Lever: flatten, embeds to bookmarks, shrink images.')}
 
-        <p class="subhead">Schwere Inhalte</p>
+        <p class="subhead">Heavy content</p>
 
         <div class="flag-row">
-          <div class="flag-main">${typeIco('embed')}<div><strong>Embeds · ${a.embeds.length}</strong><span>Schwerster Einzeltyp (mult 2,0) ≈ Last von ~${embedWeighted.toLocaleString('de-DE')} Primitiven. Nicht aktiv genutzte → Bookmark/Link (Spur 2).</span></div></div>
-          <div class="flag-actions"><button class="mini-button" type="button" data-focus="embeds" ${dis}>Markieren</button></div>
+          <div class="flag-main">${typeIco('embed')}<div><strong>Embeds · ${a.embeds.length}</strong><span>Heaviest single type (mult 2.0) ≈ load of ~${embedWeighted.toLocaleString('en-US')} primitives. Convert unused ones → bookmark/link.</span></div></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="embeds" ${dis}>Select</button></div>
         </div>
         <div class="flag-row">
-          <div class="flag-main">${typeIco('image')}<div><strong>Bilder · ${a.images.length}</strong>${a.measured || a.measuring ? `<div class="measure-slot"></div>` : '<span>Kandidaten fuer Verkleinerung im Tab „Bilder".</span>'}</div></div>
+          <div class="flag-main">${typeIco('image')}<div><strong>Images · ${a.images.length}</strong>${a.measured || a.measuring ? `<div class="measure-slot"></div>` : '<span>Candidates for shrinking in the "Images" tab.</span>'}</div></div>
           <div class="flag-actions">
-            <button class="mini-button" type="button" data-focus="images" ${dis}>Markieren</button>
+            <button class="mini-button" type="button" data-focus="images" ${dis}>Select</button>
           </div>
         </div>
         ${m.unsupportedCount > 0 ? `
         <div class="flag-row">
-          <div class="flag-main">${typeIco('unsupported')}<div><strong>Others · ${m.unsupportedCount}</strong><span>Per SDK nicht lesbar (oft Pen, Mockup, Kanban). Im Index konservativ mit mult 1,7 angesetzt – nicht auditierbar, vermutlich schwer.</span></div></div>
+          <div class="flag-main">${typeIco('unsupported')}<div><strong>Others · ${m.unsupportedCount}</strong><span>Not readable via SDK (often pen, mockup, Kanban). Counted conservatively at mult 1.7 – not auditable, likely heavy.</span></div></div>
           <div class="flag-actions"></div>
         </div>` : ''}
         <div class="flag-row">
-          <div class="flag-main">${typeIco('table')}<div><strong>Tabellen · ${a.tables.length}</strong><span>Bei vielen Spalten unter 200 Zeilen halten (Zeilenzahl per SDK nicht auslesbar – manuell pruefen). Board-Limit: max. 250 strukturierte Widgets (Tabellen + Timelines + Synced Cards).</span></div></div>
-          <div class="flag-actions"><button class="mini-button" type="button" data-focus="tables" ${dis}>Markieren</button></div>
+          <div class="flag-main">${typeIco('table')}<div><strong>Tables · ${a.tables.length}</strong><span>With many columns, keep under 200 rows (row count not readable via SDK – check manually). Board limit: max. 250 structured widgets (tables + timelines + synced cards).</span></div></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="tables" ${dis}>Select</button></div>
         </div>
         <div class="flag-row">
-          <div class="flag-main">${typeIco('frame')}<div><strong>Ausserhalb von Frames · ${a.outside.length}</strong><span>Geometrisch geschaetzt – bitte visuell pruefen.</span></div></div>
-          <div class="flag-actions"><button class="mini-button" type="button" data-focus="outside" ${dis}>Markieren</button></div>
+          <div class="flag-main">${typeIco('frame')}<div><strong>Outside frames · ${a.outside.length}</strong><span>Geometrically estimated – please verify visually.</span></div></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="outside" ${dis}>Select</button></div>
         </div>
 
-        <p class="subhead">Alle Objekte nach Typ</p>
+        <p class="subhead">All objects by type</p>
         <ul class="count-list">
-          ${sortedTypes.map(([type, n]) => `<li class="count-row"><span class="count-main">${typeIco(type)}<span class="count-label">${escapeHtml(typeLabel(type))}</span></span><b>${n.toLocaleString('de-DE')}</b></li>`).join('')}
+          ${sortedTypes.map(([type, n]) => `<li class="count-row"><span class="count-main">${typeIco(type)}<span class="count-label">${escapeHtml(typeLabel(type))}</span></span><b>${n.toLocaleString('en-US')}</b></li>`).join('')}
         </ul>
-        <p class="lead">Hinweis: Zaehlung kann leicht von der Miro-Oberflaeche abweichen (Gruppen-Eintraege, nicht unterstuetzte Typen). „Others"-Objekte kann ein Plugin nicht lesen oder anfassen.</p>
+        <p class="lead">Note: the count may differ slightly from the Miro UI (group entries, unsupported types). "Others" objects cannot be read or touched by a plugin.</p>
       `;
 
       const slot = box.querySelector('.measure-slot');
@@ -2001,18 +2001,18 @@
 
     async function focusItems(items, kind) {
       if (!hasMiro()) {
-        notify('Nur in Miro verfuegbar.');
+        notify('Only available in Miro.');
         return;
       }
       const valid = (items || []).filter((i) => i && i.id);
       if (valid.length === 0) {
-        notify('Nichts gefunden, das markiert werden koennte.');
+        notify('Nothing found that could be selected.');
         return;
       }
       try {
         await window.miro.board.select({ id: valid.map((i) => i.id) });
         await window.miro.board.viewport.zoomTo(valid);
-        notify(`${valid.length} Objekt(e) markiert und angezeigt.`);
+        notify(`${valid.length} object(s) selected and shown.`);
       } catch (error) {
         notify(messageFrom(error));
       }
@@ -2020,13 +2020,13 @@
 
     async function focusSelection() {
       if (!hasMiro()) {
-        notify('Nur in Miro verfuegbar.');
+        notify('Only available in Miro.');
         return;
       }
       try {
         const selection = await window.miro.board.getSelection();
         if (selection.length === 0) {
-          notify('Es ist nichts ausgewaehlt.');
+          notify('Nothing is selected.');
           return;
         }
         await window.miro.board.viewport.zoomTo(selection);
@@ -2038,10 +2038,10 @@
     // Schreibt den Audit-Bericht als Frame mit Text-Objekt in die aktuelle Ansicht.
     async function exportAuditToBoard() {
       if (state.running || state.busy) return;
-      if (!hasMiro()) { notify('Nur in Miro verfuegbar.'); return; }
+      if (!hasMiro()) { notify('Only available in Miro.'); return; }
       const a = state.audit;
       if (!a || a.scanning || a.error || !a.counts) {
-        notify('Bitte zuerst „Board scannen".');
+        notify('Please run "Scan board" first.');
         return;
       }
 
@@ -2051,38 +2051,38 @@
         const m = computeAuditMetrics(a.counts);
         const status = objectStatus(a.total);
         const delta = a.total > 0 ? Math.round(((m.loadIndex - a.total) / a.total) * 100) : 0;
-        const dateStr = new Date().toLocaleString('de-DE');
+        const dateStr = new Date().toLocaleString('en-US');
 
         const topTypes = Object.entries(a.counts)
           .filter(([t]) => t !== 'tag')
           .sort((x, y) => y[1] - x[1])
           .slice(0, 6)
-          .map(([t, n]) => `<p>${escapeHtml(typeLabel(t))}: ${n.toLocaleString('de-DE')}</p>`)
+          .map(([t, n]) => `<p>${escapeHtml(typeLabel(t))}: ${n.toLocaleString('en-US')}</p>`)
           .join('');
 
         const rec = status.cls === 'bad'
-          ? 'Ueber Miros Empfehlung. Schwere Inhalte reduzieren: Embeds zu Links, Bilder verkleinern, Board ggf. aufteilen.'
+          ? "Over Miro's recommendation. Reduce heavy content: embeds to links, shrink images, split the board if needed."
           : status.cls === 'warn'
-            ? 'Kritischer Bereich. Embeds/Tabellen pruefen, grosse Bilder verkleinern.'
-            : 'Im gruenen Bereich. Schwere Klassen (Embeds, Tabellen, Dokumente) im Blick behalten.';
+            ? 'Critical range. Check embeds/tables, shrink large images.'
+            : 'In the green. Keep an eye on heavy classes (embeds, tables, documents).';
 
         const content =
-          '<p><strong>Ueberblick</strong></p>' +
-          `<p>Objekte (ohne Tags): ${a.total.toLocaleString('de-DE')}</p>` +
-          `<p>Gewichteter Lastindex: ${m.loadIndex.toLocaleString('de-DE')} (${delta >= 0 ? '+' : ''}${delta}% ggue. Zahl)</p>` +
+          '<p><strong>Overview</strong></p>' +
+          `<p>Objects (excl. tags): ${a.total.toLocaleString('en-US')}</p>` +
+          `<p>Weighted load index: ${m.loadIndex.toLocaleString('en-US')} (${delta >= 0 ? '+' : ''}${delta}% vs. count)</p>` +
           `<p>Status: ${escapeHtml(status.text)}</p>` +
           '<p> </p>' +
-          '<p><strong>Schwere Inhalte</strong></p>' +
-          `<p>Embeds: ${a.embeds.length} &middot; Bilder: ${a.images.length} &middot; Tabellen: ${a.tables.length}</p>` +
-          `<p>Others: ${m.unsupportedCount} &middot; Ausserhalb von Frames: ${a.outside.length}</p>` +
+          '<p><strong>Heavy content</strong></p>' +
+          `<p>Embeds: ${a.embeds.length} &middot; Images: ${a.images.length} &middot; Tables: ${a.tables.length}</p>` +
+          `<p>Others: ${m.unsupportedCount} &middot; Outside frames: ${a.outside.length}</p>` +
           '<p> </p>' +
-          '<p><strong>Top-Objekttypen</strong></p>' +
+          '<p><strong>Top object types</strong></p>' +
           topTypes +
           '<p> </p>' +
-          '<p><strong>Empfehlung</strong></p>' +
+          '<p><strong>Recommendation</strong></p>' +
           `<p>${rec}</p>` +
           '<p> </p>' +
-          `<p>Erstellt mit Image Compress &middot; ${escapeHtml(dateStr)}</p>`;
+          `<p>Created with Image Compress &middot; ${escapeHtml(dateStr)}</p>`;
 
         const vp = await window.miro.board.viewport.get();
         const cx = vp.x + vp.width / 2;
@@ -2091,7 +2091,7 @@
         const FH = 620;
 
         const frame = await withBackoff(() => window.miro.board.createFrame({
-          title: `Image Compress · Board-Audit (${new Date().toLocaleDateString('de-DE')})`,
+          title: `Image Compress · Board Audit (${new Date().toLocaleDateString('en-US')})`,
           x: cx,
           y: cy,
           width: FW,
@@ -2111,14 +2111,14 @@
         try {
           await withBackoff(() => frame.add(text));
         } catch (addError) {
-          addEntry('Hinweis', 'Bericht erstellt, Text konnte dem Rahmen nicht zugeordnet werden: ' + messageFrom(addError), 'skipped');
+          addEntry('Note', 'Report created, but the text could not be attached to the frame: ' + messageFrom(addError), 'skipped');
         }
 
         try { await window.miro.board.viewport.zoomTo([frame]); } catch {}
-        notify('Audit-Bericht als Frame aufs Board gelegt.');
+        notify('Audit report placed on the board as a frame.');
       } catch (error) {
         notify(messageFrom(error));
-        addEntry('Bericht fehlgeschlagen', messageFrom(error), 'error');
+        addEntry('Report failed', messageFrom(error), 'error');
       } finally {
         state.busy = false;
         renderAll();
@@ -2160,7 +2160,7 @@
 
     async function refreshEmbedSelection() {
       if (!hasMiro()) {
-        state.embeds = { error: 'Nur in Miro verfuegbar – App aus einem Board starten.' };
+        state.embeds = { error: 'Only available in Miro – App aus einem Board starten.' };
         renderAll();
         return;
       }
@@ -2186,7 +2186,7 @@
       const e = state.embeds;
 
       if (!e) {
-        box.innerHTML = '<div class="empty">Markiere Embeds auf dem Board – sie erscheinen hier automatisch.</div>';
+        box.innerHTML = '<div class="empty">Select embeds on the board – they appear here automatically.</div>';
         return;
       }
       if (e.error) {
@@ -2194,22 +2194,22 @@
         return;
       }
       if (!e.list || e.list.length === 0) {
-        box.innerHTML = '<div class="empty">Keine Embeds in der Auswahl. Im Tab „Board-Audit" lassen sie sich markieren.</div>';
+        box.innerHTML = '<div class="empty">No embeds in the selection. You can select them in the "Board Audit" tab.</div>';
         return;
       }
 
       box.innerHTML = `
-        <p class="subhead">${e.list.length} Embed(s) in der Auswahl</p>
+        <p class="subhead">${e.list.length} embed(s) in the selection</p>
         <ul class="count-list">
           ${e.list.map((it) => `
             <li class="flag-row embed-item">
               <div>
                 <strong>${escapeHtml(it.label)}</strong>
-                <span>${it.url ? escapeHtml(it.url) : 'URL per SDK nicht auslesbar – wird uebersprungen'}</span>
+                <span>${it.url ? escapeHtml(it.url) : 'URL not readable via SDK – will be skipped'}</span>
               </div>
             </li>`).join('')}
         </ul>
-        <p class="lead">„Umwandeln" erstellt je Embed eine breite Sticky Note mit Titel + Link und entfernt das Original.</p>`;
+        <p class="lead">"Convert" creates a wide sticky note with title + link per embed and removes the original.</p>`;
     }
 
     function readEmbedSettings() {
@@ -2219,7 +2219,7 @@
     async function convertSelectedEmbeds() {
       if (!hasMiro()) {
         resetRun(0);
-        addEntry('Nur in Miro verfuegbar', 'Die Umwandlung braucht ein Miro Board.', 'error');
+        addEntry('Only available in Miro', 'Converting needs a Miro board.', 'error');
         state.summary.failed = 1;
         renderAll();
         return;
@@ -2227,7 +2227,7 @@
 
       if (!(await checkLicense('embedConvert'))) {
         resetRun(0);
-        addEntry('Funktion gesperrt', 'Die Embed-Umwandlung ist in dieser Version nicht freigeschaltet.', 'error');
+        addEntry('Feature locked', 'Embed conversion is not enabled in this version.', 'error');
         state.summary.failed = 1;
         renderAll();
         return;
@@ -2240,26 +2240,26 @@
         embeds = selection.filter((i) => i?.type === 'embed');
       } catch (error) {
         resetRun(0);
-        addEntry('Auswahl nicht lesbar', messageFrom(error), 'error');
+        addEntry('Selection not readable', messageFrom(error), 'error');
         renderAll();
         return;
       }
 
       if (embeds.length === 0) {
         resetRun(0);
-        addEntry('Keine Embeds ausgewaehlt', 'Markiere zuerst Embeds auf dem Board.', 'skipped');
+        addEntry('No embeds selected', 'Select embeds on the board first.', 'skipped');
         state.summary.skipped = 1;
         renderAll();
         return;
       }
 
       const backupHint = settings.createBackup
-        ? 'Ein lokales Backup wird angelegt – die Umwandlung ist ueber „Rueckgaengig" reversibel.'
-        : 'Backup ist AUS. Die Originale werden ohne Wiederherstellungsmoeglichkeit entfernt.';
+        ? 'A local backup is created – the conversion can be reversed via "Undo".'
+        : 'Backup is OFF. Originals are removed with no way to restore them.';
       const ok = await confirmDialog({
-        title: `${embeds.length} Embed(s) umwandeln?`,
-        message: `Je Embed entsteht eine breite Sticky Note mit Link, das Original wird entfernt.\n\n${backupHint}\n\nEmpfehlung: bei Trainingsboards zuerst an einer Kopie testen.`,
-        confirmLabel: 'Umwandeln',
+        title: `Convert ${embeds.length} embed(s)?`,
+        message: `Each embed becomes a wide sticky note with a link, and the original is removed.\n\n${backupHint}\n\nTip: for training boards, test on a copy first.`,
+        confirmLabel: 'Convert',
         danger: !settings.createBackup,
       });
       if (!ok) return;
@@ -2272,7 +2272,7 @@
         const backupRunId = settings.createBackup ? createBackupRunId() : null;
         if (backupRunId) {
           await saveEmbedBackupMeta(backupRunId, embeds.length);
-          addEntry('Backup aktiv', 'Originale werden lokal im Browser gesichert.', 'done');
+          addEntry('Backup active', 'Originals are saved locally in the browser.', 'done');
         }
 
         for (const embed of embeds) {
@@ -2282,10 +2282,10 @@
           await wait(400);
         }
 
-        notify(`Fertig: ${state.summary.done} Embed(s) in Links umgewandelt.`);
+        notify(`Done: ${state.summary.done} embed(s) converted to links.`);
       } catch (error) {
         state.summary.failed += 1;
-        addEntry('Lauf gestoppt', messageFrom(error), 'error');
+        addEntry('Run stopped', messageFrom(error), 'error');
       } finally {
         finishRun();
         state.embeds = null;
@@ -2298,14 +2298,14 @@
       try {
         if (!url) {
           state.summary.skipped += 1;
-          addEntry(label, 'URL per SDK nicht auslesbar – Embed bleibt unveraendert (bitte manuell).', 'skipped');
+          addEntry(label, 'URL not readable via SDK – embed left unchanged (do it manually).', 'skipped');
           return;
         }
 
         const safeUrl = safeHttpUrl(url);
         if (!safeUrl) {
           state.summary.skipped += 1;
-          addEntry(label, 'URL ist kein http(s)-Link – aus Sicherheitsgruenden uebersprungen.', 'skipped');
+          addEntry(label, 'URL is not an http(s) link – skipped for security.', 'skipped');
           return;
         }
 
@@ -2329,7 +2329,7 @@
 
         state.summary.done += 1;
         state.summary.savedBytes += 0;
-        addEntry(label, `Embed → breite Sticky mit Link.${backupRunId ? '' : ' (ohne Backup)'}`, 'done');
+        addEntry(label, `Embed → wide sticky with link.${backupRunId ? '' : ' (no backup)'}`, 'done');
       } catch (error) {
         state.summary.failed += 1;
         addEntry(label, messageFrom(error), 'error');
@@ -2382,7 +2382,7 @@
 
     async function restoreLatestEmbedRun() {
       if (!hasMiro()) {
-        addEntry('Nur in Miro verfuegbar', 'Wiederherstellung braucht ein Miro Board.', 'error');
+        addEntry('Only available in Miro', 'Restoring needs a Miro board.', 'error');
         renderAll();
         return;
       }
@@ -2391,22 +2391,22 @@
       try {
         const run = await getLatestRunByKind('embed');
         if (!run) {
-          addEntry('Keine Umwandlung gefunden', 'Es gibt kein Embed-Backup in diesem Browser.', 'skipped');
+          addEntry('No conversion found', 'There is no embed backup in this browser.', 'skipped');
           renderAll();
           return;
         }
 
         const records = await getBackupRecords(run.id);
         if (records.length === 0) {
-          addEntry('Backup leer', 'Dieses Backup enthaelt keine Embed-Daten.', 'skipped');
+          addEntry('Backup empty', 'This backup contains no embed data.', 'skipped');
           renderAll();
           return;
         }
 
         const ok = await confirmDialog({
-          title: 'Umwandlung rueckgaengig machen?',
-          message: `Letzte Umwandlung vom ${new Date(run.createdAt).toLocaleString()}.\n\n${records.length} Embed(s) werden wieder erstellt und die ersetzenden Sticky Notes entfernt.`,
-          confirmLabel: 'Rueckgaengig',
+          title: 'Undo conversion?',
+          message: `Last conversion from ${new Date(run.createdAt).toLocaleString()}.\n\n${records.length} embed(s) will be re-created and the replacement sticky notes removed.`,
+          confirmLabel: 'Undo',
         });
         if (!ok) return;
 
@@ -2421,10 +2421,10 @@
           await wait(400);
         }
 
-        notify(`Rueckgaengig: ${state.summary.done} Embed(s) wiederhergestellt.`);
+        notify(`Undone: ${state.summary.done} embed(s) restored.`);
       } catch (error) {
         state.summary.failed += 1;
-        addEntry('Rueckgaengig fehlgeschlagen', messageFrom(error), 'error');
+        addEntry('Undo failed', messageFrom(error), 'error');
       } finally {
         finishRun();
       }
@@ -2435,7 +2435,7 @@
       try {
         if (!record.url) {
           state.summary.skipped += 1;
-          addEntry(label, 'Keine URL im Backup – Embed kann nicht wiederhergestellt werden.', 'skipped');
+          addEntry(label, 'No URL in backup – embed cannot be restored.', 'skipped');
           return;
         }
 
@@ -2457,7 +2457,7 @@
         }
 
         state.summary.done += 1;
-        addEntry(label, 'Embed wiederhergestellt, Ersatz-Sticky entfernt.', 'done');
+        addEntry(label, 'Embed restored, replacement sticky removed.', 'done');
       } catch (error) {
         state.summary.failed += 1;
         addEntry(label, messageFrom(error), 'error');
@@ -2491,10 +2491,10 @@
     // Promise-basierter Bestaetigungsdialog im Miro-Look (ersetzt window.confirm).
     function confirmDialog(opts) {
       const {
-        title = 'Bestaetigen',
+        title = 'Confirm',
         message = '',
-        confirmLabel = 'Fortfahren',
-        cancelLabel = 'Abbrechen',
+        confirmLabel = 'Continue',
+        cancelLabel = 'Cancel',
         danger = false,
       } = opts || {};
 
@@ -2542,7 +2542,7 @@
     }
 
     function messageFrom(error) {
-      return error instanceof Error ? error.message : 'Unbekannter Fehler.';
+      return error instanceof Error ? error.message : 'Unknown error.';
     }
 
     function clamp(value, min, max) {
@@ -2589,7 +2589,7 @@
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .replace(/'/g, '&#39;');
     }
 
     function createBackupRunId() {
@@ -2614,7 +2614,7 @@
           }
         };
         request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error || new Error('Backup-Datenbank konnte nicht geoeffnet werden.'));
+        request.onerror = () => reject(request.error || new Error('Backup database could not be opened.'));
       });
     }
 
@@ -2697,7 +2697,7 @@
 
     async function restoreLatestBackup() {
       if (!hasMiro()) {
-        addEntry('Nur in Miro verfuegbar', 'Backups koennen nur aus einem Miro Board wiederhergestellt werden.', 'error');
+        addEntry('Only available in Miro', 'Backups can only be restored from a Miro board.', 'error');
         renderAll();
         return;
       }
@@ -2707,22 +2707,22 @@
       try {
         const latestRun = await getLatestBackupRun();
         if (!latestRun) {
-          addEntry('Kein Backup gefunden', 'Es gibt noch kein lokales Backup in diesem Browser.', 'skipped');
+          addEntry('No backup found', 'There is no local backup in this browser yet.', 'skipped');
           renderAll();
           return;
         }
 
         const records = await getBackupRecords(latestRun.id);
         if (records.length === 0) {
-          addEntry('Backup leer', 'Dieses Backup enthaelt keine Bilddaten.', 'skipped');
+          addEntry('Backup empty', 'This backup contains no image data.', 'skipped');
           renderAll();
           return;
         }
 
         const ok = await confirmDialog({
-          title: 'Backup wiederherstellen?',
-          message: `Letztes Backup vom ${new Date(latestRun.createdAt).toLocaleString()}.\n\n${records.length} Bilder werden zurueckgesetzt oder neu erstellt.`,
-          confirmLabel: 'Wiederherstellen',
+          title: 'Restore backup?',
+          message: `Last backup from ${new Date(latestRun.createdAt).toLocaleString()}.\n\n${records.length} images will be reset or re-created.`,
+          confirmLabel: 'Restore',
         });
         if (!ok) return;
 
@@ -2737,10 +2737,10 @@
           await wait(250);
         }
 
-        notify(`Backup wiederhergestellt: ${state.summary.done} Bilder.`);
+        notify(`Backup restored: ${state.summary.done} images.`);
       } catch (error) {
         state.summary.failed += 1;
-        addEntry('Restore fehlgeschlagen', messageFrom(error), 'error');
+        addEntry('Restore failed', messageFrom(error), 'error');
       } finally {
         finishRun();
       }
@@ -2753,19 +2753,19 @@
           existing.url = record.url;
           await existing.sync();
           state.summary.done += 1;
-          addEntry(record.title || record.itemId, 'Originalbild wurde auf bestehendem Item wiederhergestellt.', 'done');
+          addEntry(record.title || record.itemId, 'Original image restored on the existing item.', 'done');
           return;
         }
 
         await window.miro.board.createImage({
-          title: record.title || 'Wiederhergestelltes Bild',
+          title: record.title || 'Restored image',
           url: record.url,
           x: Number.isFinite(record.x) ? record.x : 0,
           y: Number.isFinite(record.y) ? record.y : 0,
           width: Number.isFinite(record.width) ? record.width : undefined,
         });
         state.summary.done += 1;
-        addEntry(record.title || record.itemId, 'Originalbild wurde neu erstellt.', 'done');
+        addEntry(record.title || record.itemId, 'Original image re-created.', 'done');
       } catch (error) {
         state.summary.failed += 1;
         addEntry(record.title || record.itemId, messageFrom(error), 'error');
@@ -2796,7 +2796,7 @@
         const index = tx.objectStore('items').index('runId');
         const request = index.getAll(runId);
         request.onsuccess = () => resolve(request.result || []);
-        request.onerror = () => reject(request.error || new Error('Backup konnte nicht gelesen werden.'));
+        request.onerror = () => reject(request.error || new Error('Backup could not be read.'));
       });
       db.close();
       return records;
@@ -2805,9 +2805,9 @@
     async function clearBackups() {
       if (state.running) return;
       const ok = await confirmDialog({
-        title: 'Alle Backups loeschen?',
-        message: 'Alle lokalen Backups dieser App in diesem Browser werden entfernt. Das kann nicht rueckgaengig gemacht werden.',
-        confirmLabel: 'Loeschen',
+        title: 'Delete all backups?',
+        message: 'All local backups of this app in this browser will be removed. This cannot be undone.',
+        confirmLabel: 'Delete',
         danger: true,
       });
       if (!ok) return;
@@ -2816,7 +2816,7 @@
       await dbClear(db, 'items');
       await dbClear(db, 'runs');
       db.close();
-      addEntry('Backups geloescht', 'Lokale Backups dieses Browsers wurden entfernt.', 'done');
+      addEntry('Backups deleted', 'Local backups in this browser were removed.', 'done');
       renderAll();
     }
 
@@ -2825,7 +2825,7 @@
         const tx = db.transaction(storeName, 'readwrite');
         tx.objectStore(storeName).put(value);
         tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error || new Error('Backup konnte nicht gespeichert werden.'));
+        tx.onerror = () => reject(tx.error || new Error('Backup could not be saved.'));
       });
     }
 
@@ -2833,7 +2833,7 @@
       return new Promise((resolve, reject) => {
         const request = db.transaction(storeName, 'readonly').objectStore(storeName).getAll();
         request.onsuccess = () => resolve(request.result || []);
-        request.onerror = () => reject(request.error || new Error('Backup konnte nicht gelesen werden.'));
+        request.onerror = () => reject(request.error || new Error('Backup could not be read.'));
       });
     }
 
@@ -2842,7 +2842,7 @@
         const tx = db.transaction(storeName, 'readwrite');
         tx.objectStore(storeName).clear();
         tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error || new Error('Backup konnte nicht geloescht werden.'));
+        tx.onerror = () => reject(tx.error || new Error('Backup could not be deleted.'));
       });
     }
       // --- FIX: fehlende Backup-Funktionen (sonst stuerzen bindUi & renderAll ab) ---
@@ -2858,7 +2858,7 @@
       if (restoreBtn) restoreBtn.disabled = state.running || state.busy || !hasRuns;
 
       if (!info) {
-        box.innerHTML = '<div class="empty">Backups werden geladen …</div>';
+        box.innerHTML = '<div class="empty">Loading backups …</div>';
         if (clearRow) clearRow.classList.add('hidden');
         if (!state.backupsLoading) { state.backupsLoading = true; loadBackupInfo(); }
         return;
@@ -2869,15 +2869,15 @@
         return;
       }
       if (!hasRuns) {
-        box.innerHTML = '<div class="empty">Noch keine Backups in diesem Browser. „Jetzt sichern" legt eines an.</div>';
+        box.innerHTML = '<div class="empty">No backups in this browser yet. "Back up now" creates one.</div>';
         if (clearRow) clearRow.classList.add('hidden');
         return;
       }
       box.innerHTML = `
         <div class="card">
-          <p class="index-line" style="border-top:0;padding-top:0;margin-top:0"><span>Backup-Laeufe <b>${info.runs.length}</b> · gesicherte Objekte <b>${info.totalItems.toLocaleString('de-DE')}</b></span></p>
+          <p class="index-line" style="border-top:0;padding-top:0;margin-top:0"><span>Backup runs <b>${info.runs.length}</b> · saved objects <b>${info.totalItems.toLocaleString('en-US')}</b></span></p>
           <ul class="count-list">
-            ${info.runs.slice(0, 8).map((r) => `<li class="count-row"><span>${escapeHtml(new Date(r.createdAt).toLocaleString('de-DE'))}${r.kind === 'embed' ? ' · Embeds' : ''}</span><b>${(r.count || 0).toLocaleString('de-DE')}</b></li>`).join('')}
+            ${info.runs.slice(0, 8).map((r) => `<li class="count-row"><span>${escapeHtml(new Date(r.createdAt).toLocaleString('en-US'))}${r.kind === 'embed' ? ' · Embeds' : ''}</span><b>${(r.count || 0).toLocaleString('en-US')}</b></li>`).join('')}
           </ul>
         </div>`;
       if (clearRow) clearRow.classList.remove('hidden');
@@ -2896,7 +2896,7 @@
           .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
         state.backups = { runs: list, totalItems: items.length };
       } catch (error) {
-        state.backups = { error: 'Backups konnten nicht gelesen werden: ' + messageFrom(error), runs: [], totalItems: 0 };
+        state.backups = { error: 'Backups could not be read: ' + messageFrom(error), runs: [], totalItems: 0 };
       }
       state.backupsLoading = false;
       renderBackup();
@@ -2906,7 +2906,7 @@
       if (state.running) return;
       if (!hasMiro()) {
         resetRun(0);
-        addEntry('Nur in Miro verfuegbar', 'Sichern braucht ein Miro Board.', 'error');
+        addEntry('Only available in Miro', 'Backing up needs a Miro board.', 'error');
         state.summary.failed = 1;
         renderAll();
         return;
@@ -2916,13 +2916,13 @@
         const items = await withTimeout(
           window.miro.board.get({ type: 'image' }),
           60000,
-          'Zeitueberschreitung: Das Board hat nicht geantwortet. Bitte App schliessen, Board neu laden und erneut versuchen.'
+          'Timeout: the board did not respond. Please close the app, reload the board and try again.'
         );
         const images = items.filter(isImageItem);
         state.summary.total = images.length;
         renderAll();
         if (images.length === 0) {
-          addEntry('Keine Bilder gefunden', 'Auf dem Board wurden keine Bilder gefunden.', 'skipped');
+          addEntry('No images found', 'No images were found on the board.', 'skipped');
           state.summary.skipped = 1;
           return;
         }
@@ -2935,11 +2935,11 @@
             const dataUrl = await image.getDataUrl('original');
             await saveBackupRecord(runId, image, dataUrl);
             state.summary.done += 1;
-            addEntry(title, 'Original lokal gesichert.', 'done');
+            addEntry(title, 'Original saved locally.', 'done');
           } catch (error) {
             state.summary.failed += 1;
             if (typeof isQuotaError === 'function' && isQuotaError(error)) {
-              addEntry(title, 'Lokaler Speicher voll. Sicherung gestoppt.', 'error');
+              addEntry(title, 'Local storage full. Backup stopped.', 'error');
               state.cancelRequested = true;
             } else {
               addEntry(title, messageFrom(error), 'error');
@@ -2948,10 +2948,10 @@
           renderAll();
           await wait(120);
         }
-        notify(`Backup: ${state.summary.done} Bilder gesichert.`);
+        notify(`Backup: ${state.summary.done} images saved.`);
       } catch (error) {
         state.summary.failed += 1;
-        addEntry('Sicherung gestoppt', messageFrom(error), 'error');
+        addEntry('Backup stopped', messageFrom(error), 'error');
       } finally {
         state.backups = null;
         finishRun();
