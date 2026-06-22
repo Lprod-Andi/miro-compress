@@ -1,89 +1,95 @@
-# Miro Marketplace – Listing-Paket für „Image Compress"
+# Miro Marketplace – Listing pack for “Image Compress”
 
-Vorbereitete Inhalte für die Einreichung im Miro Developer Dashboard
-(App → Marketplace listing / App review). Felder ggf. an die aktuelle
-Dashboard-Maske anpassen.
+Ready-to-paste content for submission in the Miro Developer Dashboard
+(App → Marketplace listing / App review). Adjust field names if the current
+dashboard form differs. The German version is kept as a backup in
+`docs/marketplace-listing.de.md`.
 
-## Eckdaten
+## Key facts
 
-| Feld | Wert |
+| Field | Value |
 |---|---|
-| **App-Name** | Image Compress |
-| **Tagline** (kurz) | Boards verschlanken: Bilder verkleinern, Embeds zu Links, Board-Audit |
-| **Kategorie (Vorschlag)** | Productivity / Utilities |
-| **Plattform** | Web SDK (SDK_V2), Panel-App |
-| **Preis** | Kostenlos |
-| **Sprachen** | Deutsch |
-| **Berechtigungen** | `boards:read`, `boards:write` |
+| **App name** | Image Compress |
+| **Tagline** (short) | Slim down heavy boards: shrink images, turn embeds into links, audit your board |
+| **Category (suggested)** | Productivity / Utilities |
+| **Platform** | Web SDK (SDK_V2), panel app |
+| **Price** | Free |
+| **Languages** | English |
+| **Permissions** | `boards:read`, `boards:write` |
 | **Hosting / sdkUri** | https://lprod-andi.github.io/miro-compress/ |
-| **Datenschutz-URL** | Link zu `PRIVACY.md` (z. B. GitHub-Raw oder eigene Seite) |
-| **Support-Kontakt** | andreas@lindenberg.dev |
+| **Privacy policy URL** | https://github.com/Lprod-Andi/miro-compress/blob/main/PRIVACY.md |
+| **Support contact** | andreas@lindenberg.dev |
 
-## Kurzbeschreibung (für die Übersicht, ~max. 250 Zeichen)
+## Tagline (one line, ~60–80 chars)
 
-> Image Compress macht schwere Miro-Boards wieder flüssig – besonders auf
-> schwächeren Rechnern. Verkleinere Bilder direkt im Board, wandle schwere Embeds
-> in leichte Links um und finde mit dem Board-Audit die größten Bremsen. Backups
-> bleiben lokal im Browser.
+> Slim down heavy boards: shrink images, turn embeds into links, audit your board.
 
-## Langbeschreibung
+## Short description (for the overview, ~250 chars)
 
-> **Warum Image Compress?**
-> Große, unkomprimierte Bilder, viele Objekte und eingebettete Webseiten (Embeds)
-> bremsen Miro-Boards aus: langsames Laden, ruckeliges Zoomen, „Syncing…". Image
-> Compress hilft, ein Board gezielt zu verschlanken – ohne Daten aus dem Browser
-> zu schicken.
+> Image Compress makes heavy Miro boards responsive again — especially on
+> lower-spec machines. Shrink images right inside the board, turn heavy embeds
+> into lightweight links, and use the Board Audit to find your biggest slowdowns.
+> Backups stay local in your browser.
+
+## Long description
+
+> **Why Image Compress?**
+> Large uncompressed images, thousands of objects, and embedded web pages (embeds)
+> slow Miro boards down: sluggish loading, choppy zooming, endless “Syncing…”.
+> Image Compress helps you slim a board down on purpose — without sending any data
+> to a server of ours.
 >
-> **Funktionen**
-> - **Bilder komprimieren:** Vorhandene Board-Bilder per Canvas verkleinern
->   (max. Kante & JPEG-Qualität einstellbar, „nur ersetzen wenn kleiner",
->   PNG-Beibehaltung optional). Auswahl oder ganzes Board.
-> - **Board-Audit:** Zählt alle Objekte, gleicht sie mit Miros Schwellen ab
->   (ab ~1.000 spürbar, unter 5.000 empfohlen) und zeigt einen gewichteten
->   Lastindex sowie die schwersten Inhalte (Embeds, Bilder, Tabellen, Objekte
->   außerhalb von Frames). Markiert Kandidaten direkt auf dem Board.
-> - **Embed → Link:** Wandelt schwere Embeds in schlanke Sticky Notes mit
->   klickbarem Link um (reversibel über „Rückgängig").
-> - **Lokales Backup:** Sichert Originale vor dem Ersetzen in der Browser-Datenbank
->   (IndexedDB) – wiederherstellbar, jederzeit löschbar.
+> **What it does**
+> - **Compress images:** Shrink existing board images in the browser via canvas
+>   (configurable max edge & JPEG quality, “only replace if smaller”, optional
+>   PNG preservation). Work on your selection or the whole board.
+> - **Board Audit:** Counts every object, compares it against Miro’s thresholds
+>   (noticeable from ~1,000 objects, staying under 5,000 recommended), and shows a
+>   weighted load index plus your heaviest content (embeds, images, tables, items
+>   outside frames). Selects the candidates right on the board so you can act fast.
+> - **Embed → Link:** Converts heavy embeds into slim sticky notes with a clickable
+>   link (reversible via “Undo”).
+> - **Local backup:** Saves originals before replacing them, in your browser’s
+>   local database (IndexedDB) — restorable anytime, deletable anytime.
+> - **Report to board:** Drops a clean summary frame onto the board so you can
+>   share audit results with your team.
 >
-> **Datenschutz**
-> Keine eigenen Server, kein Tracking. Die gesamte Verarbeitung läuft im Browser.
-> Backups verlassen das Gerät nicht.
+> **Privacy**
+> No servers of ours, no tracking. All processing happens in your browser.
+> Backups never leave your device. See our privacy policy for details.
 
-## Begründung der Berechtigungen (für das App-Review)
+## Permission justification (for app review)
 
-- **`boards:read`** – nötig, um Board-Objekte zu zählen (Audit), Bilder und Embeds
-  auszulesen und die Bilddaten zum Komprimieren zu laden.
-- **`boards:write`** – nötig, um komprimierte Bilder zurückzuschreiben, Embeds in
-  Sticky Notes umzuwandeln und Backups wiederherzustellen.
+- **`boards:read`** — required to count board objects (audit), read out images and
+  embeds, and load image data for compression.
+- **`boards:write`** — required to write compressed images back, convert embeds into
+  sticky notes, drop the report frame, and restore backups.
 
-Es werden ausschließlich diese beiden minimal nötigen Scopes verwendet.
+Only these two minimally necessary scopes are used. No other scopes are requested.
 
-## Hinweise für die Reviewer
+## Notes for the reviewers
 
-- Single-File-App (`index.html`), keine externen Abhängigkeiten außer dem
-  offiziellen Miro Web SDK (`https://miro.com/app/static/sdk/v2/miro.js`).
-- Content-Security-Policy als Meta-Tag gesetzt.
-- Alle Aktionen mit destruktivem Potenzial (Ersetzen, Umwandeln, Löschen) sind
-  durch einen In-App-Bestätigungsdialog abgesichert; Backups sind standardmäßig
-  aktiv und reversibel.
-- Keine Datenübertragung an Dritt-Server.
+- Single-file app (`index.html`), no external dependencies other than the official
+  Miro Web SDK (`https://miro.com/app/static/sdk/v2/miro.js`).
+- Content-Security-Policy set as a meta tag.
+- Every action with destructive potential (replace, convert, delete) is guarded by
+  an in-app confirmation dialog; backups are on by default and reversible.
+- No data is transmitted to any third-party server.
 
-## Screenshot-Checkliste (für das Listing)
+## Screenshot checklist (for the listing)
 
-Empfohlen 3–5 Screenshots, Panel-Breite (~ 320–400 px Inhalt):
+Recommended 3–5 screenshots, panel width (~320–400 px of content):
 
-- [ ] Board-Audit mit Ergebnis (Objektzahl, Lastindex, schwere Inhalte)
-- [ ] Tab „Bilder" mit Einstellungen (Qualität, max. Kante)
-- [ ] Laufender Komprimierungs-Fortschritt + Log
-- [ ] Tab „Embed → Link" mit erkannten Embeds
-- [ ] Bestätigungsdialog (zeigt Sicherheits-/Backup-Hinweis)
+- [ ] Board Audit with result (object count, load index, heaviest content)
+- [ ] “Images” tab with settings (quality, max edge)
+- [ ] Compression in progress + log
+- [ ] “Embeds” tab with detected embeds
+- [ ] Confirmation dialog (showing the safety/backup note)
 
-## Vor dem Absenden prüfen
+## Check before submitting
 
-- [ ] `app-manifest.yaml`: `appName: Image Compress`, korrekte `sdkUri`
-- [ ] Datenschutz-URL erreichbar
-- [x] Support-E-Mail eingetragen (andreas@lindenberg.dev) – Listing + `PRIVACY.md`
-- [ ] Test in einem echten Board: Icon erscheint, Panel öffnet, alle Tabs laufen
-- [ ] `.env` mit Secrets ist **nicht** deployed (nur lokal)
+- [ ] `app-manifest.yaml`: `appName: Image Compress`, correct `sdkUri`
+- [ ] Privacy policy URL reachable
+- [x] Support email entered (andreas@lindenberg.dev) — listing + `PRIVACY.md`
+- [ ] Tested in a real board: icon appears, panel opens, all tabs work
+- [ ] `.env` with secrets is **not** deployed (local only)
