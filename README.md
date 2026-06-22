@@ -93,6 +93,17 @@ Board-Kopie in Miro anlegen.
 - Content-Security-Policy als Meta-Tag gesetzt.
 - Details: [PRIVACY.md](PRIVACY.md).
 
+## Tests
+
+Automatisierte Tests (Playwright, echter Browser + gefälschtes Miro-SDK):
+
+```bash
+npm install && npm run test:install   # einmalig
+npm test
+```
+
+Details & was bewusst manuell bleibt: [tests/README.md](tests/README.md).
+
 ## Dokumentation
 
 - Überblick (Why · How · What): [docs/ueberblick.md](docs/ueberblick.md)
