@@ -8,3 +8,6 @@ coverage
 index.backup-*.html
 index.live.html
 .claude/
+test-results/
+playwright-report/
+blob-report/

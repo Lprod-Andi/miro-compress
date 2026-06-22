@@ -1,0 +1,21 @@
+{
+  "name": "image-compress",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Single-file Miro app that makes heavy boards run smoothly again. Audit, image compression, embed-to-link, local backups. Runs entirely in the browser, no backend.",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node node_modules/playwright/cli.js test",
+    "test:headed": "node node_modules/playwright/cli.js test --headed",
+    "test:report": "node node_modules/playwright/cli.js show-report",
+    "test:install": "node node_modules/playwright/cli.js install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lprod-Andi/miro-compress.git"
+  },
+  "license": "ISC"
+}
