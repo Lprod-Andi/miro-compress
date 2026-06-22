@@ -1,4 +1,4 @@
-# Image Compress — Überblick (Why · How · What)
+# Board Compress — Überblick (Why · How · What)
 
 *Produktdokumentation. Stand: 2026-06-20.*
 
@@ -7,7 +7,7 @@ schwächeren Rechnern. Läuft komplett im Browser, ohne Server.
 
 ---
 
-## Why — Warum gibt es Image Compress?
+## Why — Warum gibt es Board Compress?
 
 Große Miro-Boards werden mit der Zeit träge: das Laden dauert, Zoomen ruckelt,
 „Syncing…" blockiert die Arbeit. Auf älteren oder leistungsschwachen Geräten wird
@@ -24,7 +24,7 @@ allen Teilnehmenden synchronisieren. Die größten Bremsen:
 - **Tabellen, Dokumente, Kanban, Timelines** — teuer beim Live-Sync
 
 Bisher mussten Nutzende das mühsam von Hand aufräumen — oder wussten gar nicht,
-*was* ihr Board bremst. Genau diese Lücke schließt Image Compress: **erst sehen,
+*was* ihr Board bremst. Genau diese Lücke schließt Board Compress: **erst sehen,
 was bremst — dann gezielt verschlanken**, ohne dass Daten den Rechner verlassen.
 
 ---

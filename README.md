@@ -1,4 +1,4 @@
-# Image Compress
+# Board Compress
 
 Single-File-Miro-App, die schwere Boards wieder flüssig macht – besonders auf
 schwächeren Rechnern. Komprimiert Bilder, analysiert das Board (Audit), wandelt
@@ -53,7 +53,7 @@ In Miro Developers eine App erstellen und als Manifest-Vorlage
 `app-manifest.github-pages.example.yaml` verwenden. Wichtig:
 
 ```yaml
-appName: Image Compress
+appName: Board Compress
 sdkUri: https://DEIN-GITHUB-USER.github.io/DEIN-REPO-NAME/
 scopes:
   - boards:read

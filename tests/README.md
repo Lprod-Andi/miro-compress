@@ -1,6 +1,6 @@
 # Tests
 
-Automatisierte Tests für Image Compress mit **Playwright** (echter Headless-Chromium → echtes DOM, echtes Canvas, echtes IndexedDB). Das echte Miro-SDK wird abgefangen und durch ein steuerbares Mock ersetzt.
+Automatisierte Tests für Board Compress mit **Playwright** (echter Headless-Chromium → echtes DOM, echtes Canvas, echtes IndexedDB). Das echte Miro-SDK wird abgefangen und durch ein steuerbares Mock ersetzt.
 
 ## Ausführen
 

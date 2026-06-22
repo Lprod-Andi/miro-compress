@@ -1,4 +1,4 @@
-# Image Compress — Weg zur Miro-Veröffentlichung
+# Board Compress — Weg zur Miro-Veröffentlichung
 
 *Handover-Dokument. Stand: 2026-06-22. Enthält am Ende einen fertigen Prompt für einen neuen Chat.*
 
@@ -40,7 +40,7 @@ Im **Test-Board** (nicht Produktiv), App neu laden, durchklicken:
 - [ ] 🔴 **Secrets rotieren** im Miro Developer Dashboard (Client-Secret + Access-Token neu generieren). Die alten lagen im Klartext in `.env`. Hinweis: Die App **braucht** diese Secrets nicht (reine SDK-/iframe-App); `.env` ist gitignored und wird nie deployt.
 - [ ] **App-Konfiguration prüfen** (Dashboard → deine App):
   - `sdkUri` = `https://lprod-andi.github.io/miro-compress/`
-  - `appName` = `Image Compress`
+  - `appName` = `Board Compress`
   - Scopes: nur `boards:read`, `boards:write`
 - [ ] Sicherstellen, dass nur `index.html` produktiv ausgeliefert wird (Backups/`.env` nicht).
 
@@ -78,7 +78,7 @@ Das ist der „nochmal alles überprüfen"-Schritt. Im neuen Chat geht Claude da
 - [ ] Datenschutz-URL erreichbar und korrekt verlinkt
 - [ ] Listing-Texte Englisch, fehlerfrei, Screenshots aktuell
 - [ ] Keine Konsolen-Fehler im Board
-- [ ] Naming überall „Image Compress" (Titel, Manifest, Listing)
+- [ ] Naming überall „Board Compress" (Titel, Manifest, Listing)
 - [ ] GitHub: letzter Commit gepusht, nur nötige Dateien öffentlich (kein `.env`, keine Backups)
 - [ ] Entscheidung Pricing dokumentiert (Free für v1)
 
@@ -108,7 +108,7 @@ Das ist der „nochmal alles überprüfen"-Schritt. Im neuen Chat geht Claude da
 > Kopiere den folgenden Block als erste Nachricht in einen neuen Chat:
 
 ```text
-Projekt: Miro-App „Image Compress" unter Z:\Projects\MiroCompress (Single-File index.html,
+Projekt: Miro-App „Board Compress" unter Z:\Projects\MiroCompress (Single-File index.html,
 englische UI, Mirotone-Design). Repo: Lprod-Andi/miro-compress, live über GitHub Pages
 (https://lprod-andi.github.io/miro-compress/). Lokal ist ein Git-Repo eingerichtet; Pushes
 mache ich selbst (git push, Credential Manager). Es gibt eine Playwright-Testsuite (npm test,

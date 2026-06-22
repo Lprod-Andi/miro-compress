@@ -1,4 +1,4 @@
-# Miro Marketplace – Listing pack for “Image Compress”
+# Miro Marketplace – Listing pack for “Board Compress”
 
 Ready-to-paste content for submission in the Miro Developer Dashboard
 (App → Marketplace listing / App review). Adjust field names if the current
@@ -9,7 +9,7 @@ dashboard form differs. The German version is kept as a backup in
 
 | Field | Value |
 |---|---|
-| **App name** | Image Compress |
+| **App name** | Board Compress |
 | **Tagline** (short) | Slim down heavy boards: shrink images, turn embeds into links, audit your board |
 | **Category (suggested)** | Productivity / Utilities |
 | **Platform** | Web SDK (SDK_V2), panel app |
@@ -26,17 +26,17 @@ dashboard form differs. The German version is kept as a backup in
 
 ## Short description (for the overview, ~250 chars)
 
-> Image Compress makes heavy Miro boards responsive again — especially on
+> Board Compress makes heavy Miro boards responsive again — especially on
 > lower-spec machines. Shrink images right inside the board, turn heavy embeds
 > into lightweight links, and use the Board Audit to find your biggest slowdowns.
 > Backups stay local in your browser.
 
 ## Long description
 
-> **Why Image Compress?**
+> **Why Board Compress?**
 > Large uncompressed images, thousands of objects, and embedded web pages (embeds)
 > slow Miro boards down: sluggish loading, choppy zooming, endless “Syncing…”.
-> Image Compress helps you slim a board down on purpose — without sending any data
+> Board Compress helps you slim a board down on purpose — without sending any data
 > to a server of ours.
 >
 > **What it does**
@@ -88,7 +88,7 @@ Recommended 3–5 screenshots, panel width (~320–400 px of content):
 
 ## Check before submitting
 
-- [ ] `app-manifest.yaml`: `appName: Image Compress`, correct `sdkUri`
+- [ ] `app-manifest.yaml`: `appName: Board Compress`, correct `sdkUri`
 - [ ] Privacy policy URL reachable
 - [x] Support email entered (andreas@lindenberg.dev) — listing + `PRIVACY.md`
 - [ ] Tested in a real board: icon appears, panel opens, all tabs work

@@ -1,8 +1,8 @@
-# Privacy Policy – Image Compress
+# Privacy Policy – Board Compress
 
 **Last updated: 19 June 2026**
 
-Image Compress is a Miro app for optimizing boards (shrinking images, board audit,
+Board Compress is a Miro app for optimizing boards (shrinking images, board audit,
 converting embeds into links, local backups). This policy describes which data is
 processed while you use it.
 
@@ -15,7 +15,7 @@ processed while you use it.
 
 ## Summary
 
-**Image Compress does not send any personal data to servers of ours.** There is no
+**Board Compress does not send any personal data to servers of ours.** There is no
 backend server and no database operated by the provider. All processing happens
 exclusively in the browser, on the device of the person using the app.
 

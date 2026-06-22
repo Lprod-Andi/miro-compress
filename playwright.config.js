@@ -1,6 +1,6 @@
 const { defineConfig, devices } = require('@playwright/test');
 
-// Image Compress – Test-Konfiguration.
+// Board Compress – Test-Konfiguration.
 // Die App wird über einen kleinen iframe-Harness (tests/harness.html) geladen,
 // damit isEmbedded()/hasMiro() wie im echten Miro greifen. Ein statischer
 // Server liefert die Dateien aus; das echte Miro-SDK wird im Test abgefangen

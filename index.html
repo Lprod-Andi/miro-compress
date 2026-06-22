@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://miro.com https://*.miro.com; script-src 'self' 'unsafe-inline' https://miro.com https://*.miro.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https:; connect-src 'self' https: data: blob:; base-uri 'self'; object-src 'none';" />
-  <title>Image Compress</title>
+  <title>Board Compress</title>
   <script src="https://miro.com/app/static/sdk/v2/miro.js"></script>
   <style>
 
@@ -755,7 +755,7 @@
     <header class="topbar">
       <div>
         <p class="eyebrow">Miro · Board optimization</p>
-        <h1>Image Compress</h1>
+        <h1>Board Compress</h1>
       </div>
       <div id="connection" class="status-pill">
         <span class="status-dot"></span>
@@ -1175,7 +1175,7 @@
 
       if (!(await checkLicense('compress'))) {
         resetRun(0);
-        addEntry('Feature locked', 'Image compression is not enabled in this version.', 'error');
+        addEntry('Feature locked', 'Board Compression is not enabled in this version.', 'error');
         state.summary.failed = 1;
         renderAll();
         return;
@@ -2082,7 +2082,7 @@
           '<p><strong>Recommendation</strong></p>' +
           `<p>${rec}</p>` +
           '<p> </p>' +
-          `<p>Created with Image Compress &middot; ${escapeHtml(dateStr)}</p>`;
+          `<p>Created with Board Compress &middot; ${escapeHtml(dateStr)}</p>`;
 
         const vp = await window.miro.board.viewport.get();
         const cx = vp.x + vp.width / 2;
@@ -2091,7 +2091,7 @@
         const FH = 620;
 
         const frame = await withBackoff(() => window.miro.board.createFrame({
-          title: `Image Compress · Board Audit (${new Date().toLocaleDateString('en-US')})`,
+          title: `Board Compress · Board Audit (${new Date().toLocaleDateString('en-US')})`,
           x: cx,
           y: cy,
           width: FW,
@@ -2343,7 +2343,7 @@
         kind: 'embed',
         createdAt: new Date().toISOString(),
         expectedCount,
-        app: 'Image Compress',
+        app: 'Board Compress',
         version: 1,
       });
       db.close();
@@ -2670,7 +2670,7 @@
         kind: 'image',
         createdAt: new Date().toISOString(),
         expectedCount,
-        app: 'Image Compress',
+        app: 'Board Compress',
         version: 1,
         ...extra,
       });

@@ -1,4 +1,4 @@
-# Image Compress — Technische Dokumentation
+# Board Compress — Technische Dokumentation
 
 *Stand: 2026-06-20. Diese Doku ist bewusst explizit und strukturiert, damit sie
 sowohl von Entwickler:innen als auch von LLMs/Agenten zuverlässig gelesen werden
@@ -15,7 +15,7 @@ kann.*
 
 ## 1. TL;DR / Architektur in einem Absatz
 
-Image Compress ist eine **client-seitige Single-File-Miro-Panel-App**. Sie wird
+Board Compress ist eine **client-seitige Single-File-Miro-Panel-App**. Sie wird
 von Miro in einem iframe geladen, kommuniziert ausschließlich über das **Miro Web
 SDK v2** (`window.miro.board.*`), verarbeitet Bilder lokal per **Canvas** und
 speichert optionale Backups in **IndexedDB**. UI-Muster: ein zentrales
@@ -53,7 +53,7 @@ Abrufen der Board-Bilddaten.
 ```
 <head>
   <meta CSP>                      … Content-Security-Policy
-  <title>Image Compress</title>
+  <title>Board Compress</title>
   <script src=miro.js>            … Miro Web SDK (extern, einziges Fremd-Skript)
   <style>
     @font-face Open Sans          … Base64-woff2 (Variable, 300–800), eingebettet

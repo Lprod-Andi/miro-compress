@@ -1,4 +1,4 @@
-# Miro Marketplace – Listing-Paket für „Image Compress"
+# Miro Marketplace – Listing-Paket für „Board Compress"
 
 Vorbereitete Inhalte für die Einreichung im Miro Developer Dashboard
 (App → Marketplace listing / App review). Felder ggf. an die aktuelle
@@ -8,7 +8,7 @@ Dashboard-Maske anpassen.
 
 | Feld | Wert |
 |---|---|
-| **App-Name** | Image Compress |
+| **App-Name** | Board Compress |
 | **Tagline** (kurz) | Boards verschlanken: Bilder verkleinern, Embeds zu Links, Board-Audit |
 | **Kategorie (Vorschlag)** | Productivity / Utilities |
 | **Plattform** | Web SDK (SDK_V2), Panel-App |
@@ -21,14 +21,14 @@ Dashboard-Maske anpassen.
 
 ## Kurzbeschreibung (für die Übersicht, ~max. 250 Zeichen)
 
-> Image Compress macht schwere Miro-Boards wieder flüssig – besonders auf
+> Board Compress macht schwere Miro-Boards wieder flüssig – besonders auf
 > schwächeren Rechnern. Verkleinere Bilder direkt im Board, wandle schwere Embeds
 > in leichte Links um und finde mit dem Board-Audit die größten Bremsen. Backups
 > bleiben lokal im Browser.
 
 ## Langbeschreibung
 
-> **Warum Image Compress?**
+> **Warum Board Compress?**
 > Große, unkomprimierte Bilder, viele Objekte und eingebettete Webseiten (Embeds)
 > bremsen Miro-Boards aus: langsames Laden, ruckeliges Zoomen, „Syncing…". Image
 > Compress hilft, ein Board gezielt zu verschlanken – ohne Daten aus dem Browser
@@ -82,7 +82,7 @@ Empfohlen 3–5 Screenshots, Panel-Breite (~ 320–400 px Inhalt):
 
 ## Vor dem Absenden prüfen
 
-- [ ] `app-manifest.yaml`: `appName: Image Compress`, korrekte `sdkUri`
+- [ ] `app-manifest.yaml`: `appName: Board Compress`, korrekte `sdkUri`
 - [ ] Datenschutz-URL erreichbar
 - [x] Support-E-Mail eingetragen (andreas@lindenberg.dev) – Listing + `PRIVACY.md`
 - [ ] Test in einem echten Board: Icon erscheint, Panel öffnet, alle Tabs laufen

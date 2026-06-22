@@ -1,8 +1,8 @@
-# Datenschutzerklärung – Image Compress
+# Datenschutzerklärung – Board Compress
 
 **Stand: 19. Juni 2026**
 
-Image Compress ist eine Miro-App zum Optimieren von Boards (Bilder verkleinern,
+Board Compress ist eine Miro-App zum Optimieren von Boards (Bilder verkleinern,
 Board-Audit, Embeds in Links umwandeln, lokale Backups). Diese Erklärung
 beschreibt, welche Daten dabei verarbeitet werden.
 
@@ -13,7 +13,7 @@ beschreibt, welche Daten dabei verarbeitet werden.
 
 ## Kurzfassung
 
-**Image Compress sendet keine personenbezogenen Daten an eigene Server.** Es gibt
+**Board Compress sendet keine personenbezogenen Daten an eigene Server.** Es gibt
 keinen Backend-Server und keine Datenbank des Anbieters. Die gesamte Verarbeitung
 findet ausschließlich im Browser auf dem Gerät der nutzenden Person statt.
 
