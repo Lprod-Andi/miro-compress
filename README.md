@@ -1,114 +1,129 @@
 # Board Compress
 
-Single-File-Miro-App, die schwere Boards wieder flüssig macht – besonders auf
-schwächeren Rechnern. Komprimiert Bilder, analysiert das Board (Audit), wandelt
-Embeds in Links um und legt lokale Backups an. Alles läuft im Browser, ohne
-eigenen Server.
+Board Compress is a single-file Miro app that makes heavy boards smooth again —
+especially on lower-spec machines. It compresses board images, audits the board
+to find what slows it down, turns embeds into lightweight links, and keeps local
+backups. Everything runs in the browser: no backend and no external upload
+beyond the normal Miro SDK.
 
-## Was muss auf GitHub Pages?
+## What it does
 
-Nur diese Datei:
+- **Compress images** — shrink existing board images in the browser via canvas
+  (max-edge + JPEG-quality presets XS/S/M, "only replace if smaller", optional
+  PNG preservation). Works on a selection or the whole board.
+- **Board Audit** — counts every object, compares it against Miro's thresholds
+  (noticeable from ~1,000 objects, recommended under 5,000), breaks the load into
+  two risk dimensions (live-sync lag and load/RAM), and flags the heaviest
+  content that is actually present on the board (embeds, images, tables, items
+  outside frames). Lets you select those objects right on the board. Nothing is
+  changed or deleted by the audit itself.
+- **Embed → Link** — converts heavy embeds into slim sticky notes with a
+  clickable link (reversible).
+- **Local backup** — saves originals before replacing them, in the browser's
+  local database (IndexedDB). Restore or delete anytime.
+- **Report to board** — drops a clean summary frame onto the board so you can
+  share audit results with your team.
+
+## For Miro reviewers
+
+A quick map of what to check:
+
+- **Single file.** The entire app is `index.html` — no build step, no bundler,
+  no `src/`, no server. The only external resource is the official Miro Web SDK
+  (`https://miro.com/app/static/sdk/v2/miro.js`).
+- **Scopes — only two, both minimal:**
+  - `boards:read` — count objects (audit), read images/embeds, load image data
+    for compression.
+  - `boards:write` — write compressed images back, convert embeds to sticky
+    notes, place the report frame, restore backups.
+- **No data leaves the device.** No backend of ours, no tracking, no analytics.
+  Image processing happens locally via canvas. Backups live only in the user's
+  browser (IndexedDB).
+- **Privacy-friendly fonts.** Open Sans is embedded as a data URI — no external
+  font request.
+- **Safety.** Every destructive action (replace, convert, delete) is behind an
+  in-app confirmation dialog; automatic backups are on by default and reversible.
+- **Security.** A Content-Security-Policy meta tag restricts sources, and all
+  dynamic content is HTML-escaped before it is inserted into the DOM.
+- **Privacy policy:** [PRIVACY.md](PRIVACY.md).
+
+## Deploy (GitHub Pages)
+
+Only one file needs to be hosted:
 
 ```text
 index.html
 ```
 
-Mehr nicht – keine `src/`, kein `dist/`, kein `package.json`, kein Vite, kein npm,
-kein Workflow.
+No `src/`, `dist/`, `package.json`, Vite, or npm on the host.
 
-> Hinweis: `index.backup-*.html` sind lokale Sicherungen früherer Stände und
-> gehören **nicht** auf GitHub Pages.
+> Note: `index.backup-*.html` are local snapshots of earlier states and must
+> **not** be deployed.
 
-## Sinnvolle lokale Dateien
+Steps:
 
-```text
-index.html
-README.md
-PRIVACY.md
-app-manifest.yaml
-app-manifest.github-pages.example.yaml
-docs/marketplace-listing.md
-.gitignore
-```
-
-## GitHub Pages anlegen
-
-1. Repository erstellen, z. B. `miro-compress`.
-2. Nur `index.html` hochladen.
+1. Create a repository (e.g. `miro-compress`).
+2. Upload `index.html`.
 3. `Settings` → `Pages`.
-4. `Build and deployment` → Quelle `Deploy from a branch`.
-5. Branch `main`, Folder `/root`, speichern.
+4. `Build and deployment` → source `Deploy from a branch`.
+5. Branch `main`, folder `/root`, save.
 
-Ergebnis-URL der Form:
+The resulting URL …
 
 ```text
-https://DEIN-GITHUB-USER.github.io/DEIN-REPO-NAME/
+https://YOUR-GITHUB-USER.github.io/YOUR-REPO/
 ```
 
-Diese URL ist die `sdkUri` für Miro.
+… is the `sdkUri` for Miro.
 
-## Miro-App anlegen
+## Create the Miro app
 
-In Miro Developers eine App erstellen und als Manifest-Vorlage
-`app-manifest.github-pages.example.yaml` verwenden. Wichtig:
+In Miro Developers, create an app and use
+`app-manifest.github-pages.example.yaml` as the manifest template:
 
 ```yaml
 appName: Board Compress
-sdkUri: https://DEIN-GITHUB-USER.github.io/DEIN-REPO-NAME/
+sdkUri: https://YOUR-GITHUB-USER.github.io/YOUR-REPO/
 scopes:
   - boards:read
   - boards:write
 ```
 
-App installieren, Board öffnen, App-Icon anklicken.
+Install the app, open a board, click the app icon.
 
-## Funktionen
+## Backups
 
-- vorhandene Board-Bilder komprimieren (Auswahl oder ganzes Board)
-- Board-Audit: Objektzahl, gewichteter Lastindex, schwerste Inhalte
-- Embeds in schlanke Links (Sticky Notes) umwandeln – reversibel
-- lokales Backup vor dem Ersetzen, Wiederherstellen, Löschen
-- Fortschritt, Abbruch und Log
+With backups enabled, the app stores originals before replacing them in the
+browser's local database (IndexedDB, store `image-compress-backups`). The data
+never leaves the device and is bound to this browser profile.
 
-## Backup-System
+> Backups from earlier versions (store `miro-bildkompressor-backups`) are
+> migrated automatically on first start.
 
-Bei aktivem Backup speichert die App Originale vor dem Ersetzen in der lokalen
-Browser-Datenbank (`IndexedDB`, Speicher `image-compress-backups`). Die Daten
-verlassen das Gerät nicht und sind an dieses Browserprofil gebunden.
+In the Backup section: restore the latest backup, or delete all. Restore first
+resets the existing item by ID; if it no longer exists, the original is recreated.
 
-> Backups früherer Versionen (Speicher `miro-bildkompressor-backups`) werden beim
-> ersten Start automatisch übernommen.
-
-Im Backup-Tab: letztes Backup wiederherstellen, alle löschen. Die
-Wiederherstellung setzt zuerst das bestehende Item per ID zurück; existiert es
-nicht mehr, wird das Original neu erstellt.
-
-Wichtig: Browser-Speicher ist begrenzt. Für wichtige Boards zusätzlich eine
-Board-Kopie in Miro anlegen.
-
-## Sicherheit & Datenschutz
-
-- Kein Backend, keine externen Uploads außer dem normalen Einfügen in Miro.
-- Kein Tracking. Verarbeitung per Canvas im Browser.
-- Content-Security-Policy als Meta-Tag gesetzt.
-- Details: [PRIVACY.md](PRIVACY.md).
+Note: browser storage is limited. For important boards, also keep a board copy in
+Miro.
 
 ## Tests
 
-Automatisierte Tests (Playwright, echter Browser + gefälschtes Miro-SDK):
+Automated tests (Playwright, real browser + mocked Miro SDK):
 
 ```bash
-npm install && npm run test:install   # einmalig
+npm install && npm run test:install   # once
 npm test
 ```
 
-Details & was bewusst manuell bleibt: [tests/README.md](tests/README.md).
+Details, and what stays manual on purpose: [tests/README.md](tests/README.md).
 
-## Dokumentation
+## Documentation
 
-- Überblick (Why · How · What): [docs/ueberblick.md](docs/ueberblick.md)
-- Technische Doku (Entwickler & LLMs): [docs/technische-doku.md](docs/technische-doku.md)
+- Marketplace listing content: [docs/marketplace-listing.md](docs/marketplace-listing.md)
+- Overview and technical docs live under [`docs/`](docs/).
 
-## Marketplace
+## Privacy
 
-Vorbereitete Listing-Inhalte: [docs/marketplace-listing.md](docs/marketplace-listing.md).
+No backend, no external uploads beyond the normal insert into Miro. No tracking;
+processing happens via canvas in the browser. Content-Security-Policy is set as a
+meta tag. Full details: [PRIVACY.md](PRIVACY.md).

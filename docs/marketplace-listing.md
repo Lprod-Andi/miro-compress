@@ -44,8 +44,9 @@ dashboard form differs. The German version is kept as a backup in
 >   (configurable max edge & JPEG quality, “only replace if smaller”, optional
 >   PNG preservation). Work on your selection or the whole board.
 > - **Board Audit:** Counts every object, compares it against Miro’s thresholds
->   (noticeable from ~1,000 objects, staying under 5,000 recommended), and shows a
->   weighted load index plus your heaviest content (embeds, images, tables, items
+>   (noticeable from ~1,000 objects, staying under 5,000 recommended), breaks the
+>   load into two risk dimensions (live-sync lag and load/RAM), and flags the
+>   heaviest content actually present on the board (embeds, images, tables, items
 >   outside frames). Selects the candidates right on the board so you can act fast.
 > - **Embed → Link:** Converts heavy embeds into slim sticky notes with a clickable
 >   link (reversible via “Undo”).
@@ -80,7 +81,7 @@ Only these two minimally necessary scopes are used. No other scopes are requeste
 
 Recommended 3–5 screenshots, panel width (~320–400 px of content):
 
-- [ ] Board Audit with result (object count, load index, heaviest content)
+- [ ] Board Audit with result (object count, risk dimensions, heaviest content)
 - [ ] “Images” tab with settings (quality, max edge)
 - [ ] Compression in progress + log
 - [ ] “Embeds” tab with detected embeds
