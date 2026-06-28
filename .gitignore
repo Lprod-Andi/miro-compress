@@ -11,3 +11,12 @@ index.live.html
 test-results/
 playwright-report/
 blob-report/
+
+# Local-only docs: German versions stay on disk, GitHub is English-only.
+# Internal notes / design specs are not published either.
+*.de.md
+docs/ueberblick.md
+docs/technische-doku.md
+docs/veroeffentlichung-naechste-schritte.md
+docs/superpowers/
+docs/miro-einreichung.md

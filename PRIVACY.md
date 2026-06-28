@@ -6,8 +6,6 @@ Board Compress is a Miro app for optimizing boards (shrinking images, board audi
 converting embeds into links, local backups). This policy describes which data is
 processed while you use it.
 
-*(A German version of this policy is kept as a backup in `PRIVACY.de.md`.)*
-
 ## Data controller
 
 - **Provider:** Andreas Lindenberg

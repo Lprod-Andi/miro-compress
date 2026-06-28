@@ -120,7 +120,6 @@ Details, and what stays manual on purpose: [tests/README.md](tests/README.md).
 ## Documentation
 
 - Marketplace listing content: [docs/marketplace-listing.md](docs/marketplace-listing.md)
-- Overview and technical docs live under [`docs/`](docs/).
 
 ## Privacy
 

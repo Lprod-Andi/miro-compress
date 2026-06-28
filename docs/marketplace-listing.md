@@ -2,8 +2,7 @@
 
 Ready-to-paste content for submission in the Miro Developer Dashboard
 (App → Marketplace listing / App review). Adjust field names if the current
-dashboard form differs. The German version is kept as a backup in
-`docs/marketplace-listing.de.md`.
+dashboard form differs.
 
 ## Key facts
 
