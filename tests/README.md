@@ -1,26 +1,39 @@
 # Tests
 
-Automatisierte Tests für Board Compress mit **Playwright** (echter Headless-Chromium → echtes DOM, echtes Canvas, echtes IndexedDB). Das echte Miro-SDK wird abgefangen und durch ein steuerbares Mock ersetzt.
+Automated tests for Board Compress using **Playwright** (real headless Chromium →
+real DOM, real canvas, real IndexedDB). The real Miro SDK is intercepted and
+replaced with a controllable mock.
 
-## Ausführen
+## Run
 
 ```bash
-npm install            # einmalig
-npm run test:install   # einmalig: Chromium-Browser laden
-npm test               # alle Tests
-npm run test:headed    # sichtbarer Browser (Debugging)
-npm run test:report    # HTML-Report des letzten Laufs
+npm install            # once
+npm run test:install   # once: download the Chromium browser
+npm test               # all tests
+npm run test:headed    # visible browser (debugging)
+npm run test:report    # HTML report of the last run
 ```
 
-## Aufbau
+## Structure
 
-- **`tests/harness.html`** – lädt `index.html` in einem iframe, damit `isEmbedded()`/`hasMiro()` sich wie im echten Miro verhalten.
-- **`tests/helpers.js`** – `installMiroMock()` (gefälschtes `window.miro`, Factories `__mkImage`/`__mkEmbed`, Aufruf-Recorder) und `openApp(page)`.
-- **`tests/logic.spec.js`** – reine Funktionen ohne SDK: `formatBytes`, `getTargetSize`, `safeHttpUrl`, `escapeHtml`, `objectStatus`, `computeAuditMetrics` (Lastindex), Größen-Presets, `chooseOutputMime`.
-- **`tests/flows.spec.js`** – Abläufe mit Mock-SDK: Bildkompression (inkl. Bestätigungsdialog & echter Canvas-JPEG-Erzeugung), Board-Audit, Backup→Restore (echtes IndexedDB), Embed→Sticky-Umwandlung.
+- **`tests/harness.html`** – loads `index.html` in an iframe so that
+  `isEmbedded()`/`hasMiro()` behave like inside real Miro.
+- **`tests/helpers.js`** – `installMiroMock()` (a fake `window.miro`, the
+  `__mkImage`/`__mkEmbed` factories, a call recorder) and `openApp(page)`.
+- **`tests/logic.spec.js`** – pure functions without the SDK: `formatBytes`,
+  `getTargetSize`, `safeHttpUrl`, `escapeHtml`, `objectStatus`,
+  `computeAuditMetrics` (load index), size presets, `chooseOutputMime`.
+- **`tests/flows.spec.js`** – flows with the mock SDK: image compression
+  (including the confirmation dialog and real canvas JPEG generation), board
+  audit, backup→restore (real IndexedDB), embed→sticky conversion.
 
-## Was diese Tests NICHT abdecken (bewusst → manuell)
+## What these tests do NOT cover (deliberately → manual)
 
-Das **echte** Miro-Verhalten lässt sich nicht automatisieren: ob Miro das `sync()`-Bild dauerhaft speichert, echte Rate-Limits, echtes CORS auf Miros Bild-CDN, und das Rendern im echten Panel. Diese Punkte bleiben **manueller Smoke-Test in einem echten Board** (siehe Release-Checkliste) + Miros eigenes App-Review.
+The **real** Miro behavior can't be automated: whether Miro persists the
+`sync()`ed image, real rate limits, real CORS on Miro's image CDN, and rendering
+inside the real panel. Those stay a **manual smoke test in a real board** (see the
+release checklist) plus Miro's own app review.
 
-> Hinweis: Die `package.json`-Scripts rufen Playwright über `node node_modules/playwright/cli.js …` auf (statt nur `playwright …`), damit es unabhängig vom Bin-Shim auf jeder Plattform läuft.
+> Note: the `package.json` scripts call Playwright via
+> `node node_modules/playwright/cli.js …` (instead of just `playwright …`) so it
+> runs independently of the bin shim on every platform.
