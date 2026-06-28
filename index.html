@@ -70,52 +70,6 @@
       padding: 18px;
     }
 
-    .topbar {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .eyebrow {
-      margin: 0 0 4px;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      color: var(--text);
-      font-size: 24px;
-      line-height: 1.08;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      min-height: 32px;
-      padding: 7px 10px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--warn);
-    }
-
-    .status-pill.connected .status-dot { background: var(--ok); }
 
     /* Navigation als Icon-Kacheln (Icon im abgerundeten Quadrat + Label) */
     .tabs {
@@ -172,6 +126,57 @@
     .tab-button.sub { min-height: 48px; font-size: 13px; }
     .tab-button.sub .tab-ico { width: 28px; height: 28px; }
     .tab-button.sub .tab-ico svg { width: 16px; height: 16px; }
+
+    /* Analyze <-> Optimize – grosser Umschalter mit Schiebeschalter (wie Mockup) */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 4px 0 16px;
+    }
+
+    .mode-side {
+      padding: 2px 2px;
+      background: none;
+      color: var(--line-strong);
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1;
+      transition: color 120ms ease;
+    }
+
+    .mode-side.active { color: var(--primary); }
+    .mode-side:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+
+    .mode-switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      flex: 0 0 auto;
+      padding: 0;
+      border-radius: 999px;
+      background: var(--primary);
+      cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+
+    .mode-switch:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    .mode-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(9, 9, 9, 0.25);
+      transition: transform 140ms ease;
+    }
+
+    .mode-switch.on .mode-knob { transform: translateX(24px); }
 
     .metrics {
       display: grid;
@@ -732,9 +737,6 @@
 
     @media (max-width: 430px) {
       .app { padding: 16px 12px 22px; }
-      .topbar { align-items: flex-start; }
-      h1 { font-size: 22px; }
-      .status-pill { padding-inline: 8px; }
       .metrics { gap: 6px; }
       .metric { padding: 9px 8px; }
       .field { grid-template-columns: minmax(86px, 1fr) minmax(80px, 1.4fr) auto; }
@@ -752,25 +754,11 @@
 </head>
 <body>
   <main class="app">
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Miro · Board optimization</p>
-        <h1>Board Compress</h1>
-      </div>
-      <div id="connection" class="status-pill">
-        <span class="status-dot"></span>
-        <span id="connection-label">Local</span>
-      </div>
-    </header>
-
-    <nav class="tabs" aria-label="Area">
-      <button id="grp-analyse" class="tab-button active" type="button">
-        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.6-3.6"/></svg></span>Analyze
-      </button>
-      <button id="grp-optimierung" class="tab-button" type="button">
-        <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L5 13h5l-1 8 8-10h-5z"/></svg></span>Optimize
-      </button>
-    </nav>
+    <div class="mode-toggle" role="group" aria-label="Mode">
+      <button id="grp-analyse" class="mode-side active" type="button" aria-pressed="true">Analyze</button>
+      <button id="mode-switch" class="mode-switch" type="button" role="switch" aria-checked="false" aria-label="Switch between Analyze and Optimize"><span class="mode-knob"></span></button>
+      <button id="grp-optimierung" class="mode-side" type="button" aria-pressed="false">Optimize</button>
+    </div>
 
     <nav id="subtabs-analyse" class="tabs subtabs" aria-label="Analysis tools">
       <button id="tab-audit" class="tab-button sub active" type="button">
@@ -1046,8 +1034,7 @@
 
     function cacheElements() {
       for (const id of [
-        'connection', 'connection-label',
-        'grp-analyse', 'grp-optimierung', 'subtabs-analyse', 'subtabs-optimierung',
+        'grp-analyse', 'grp-optimierung', 'mode-switch', 'subtabs-analyse', 'subtabs-optimierung',
         'tab-board', 'tab-audit', 'tab-info', 'tab-embed',
         'metrics', 'metric-done', 'metric-saved', 'settings-form', 'scope-fieldset',
         'quality-input', 'quality-output', 'auto-backup-toggle',
@@ -1066,6 +1053,7 @@
     function bindUi() {
       els['grp-analyse'].addEventListener('click', () => setGroup('analyse'));
       els['grp-optimierung'].addEventListener('click', () => setGroup('optimierung'));
+      els['mode-switch'].addEventListener('click', () => setGroup(state.group === 'analyse' ? 'optimierung' : 'analyse'));
       els['tab-board'].addEventListener('click', () => setMode('board'));
       els['tab-audit'].addEventListener('click', () => setMode('audit'));
       els['tab-info'].addEventListener('click', () => setMode('info'));
@@ -1108,6 +1096,9 @@
     }
 
     function setConnection(connected) {
+      // Verbindungsanzeige wurde aus der Kopfzeile entfernt (Miro-Panel zeigt den Titel bereits).
+      // Funktion bleibt fuer die SDK-Erkennung erhalten, ist aber gegen fehlende Elemente abgesichert.
+      if (!els.connection) return;
       els.connection.classList.toggle('connected', connected);
       els['connection-label'].textContent = connected ? 'Miro' : 'Local';
     }
@@ -1560,6 +1551,10 @@
       // Obere Ebene
       els['grp-analyse'].classList.toggle('active', state.group === 'analyse');
       els['grp-optimierung'].classList.toggle('active', state.group === 'optimierung');
+      els['grp-analyse'].setAttribute('aria-pressed', state.group === 'analyse' ? 'true' : 'false');
+      els['grp-optimierung'].setAttribute('aria-pressed', state.group === 'optimierung' ? 'true' : 'false');
+      els['mode-switch'].classList.toggle('on', state.group === 'optimierung');
+      els['mode-switch'].setAttribute('aria-checked', state.group === 'optimierung' ? 'true' : 'false');
       els['subtabs-analyse'].classList.toggle('hidden', state.group !== 'analyse');
       els['subtabs-optimierung'].classList.toggle('hidden', state.group !== 'optimierung');
 
@@ -1873,11 +1868,7 @@
       const status = objectStatus(a.total);
       const dis = (state.running || state.busy) ? 'disabled' : '';
       const m = computeAuditMetrics(a.counts);
-      const delta = a.total > 0 ? Math.round(((m.loadIndex - a.total) / a.total) * 100) : 0;
       const embedWeighted = Math.round(a.embeds.length * (TYPE_WEIGHTS.embed.mult));
-      const indexNote = delta < 15
-        ? `Right now the index is only ${delta}% above the raw count – the many primitives dominate. It climbs noticeably once heavy classes (embeds, tables, documents) grow over time.`
-        : `Heavy classes already lift the index ${delta}% above the raw object count – here, slimming down pays off more than just tidying up.`;
 
       const dimBlock = (title, rows, trackText) => `
         <div class="card">
@@ -1916,6 +1907,35 @@
           <div class="flag-actions"><button class="mini-button" type="button" data-measure ${dis}>Measure sizes</button></div>`;
       }
 
+      // Heavy content: nur Klassen zeigen, die tatsaechlich auf dem Board vorkommen (Anzahl > 0).
+      const heavyRows = [];
+      if (a.embeds.length > 0) heavyRows.push(`
+        <div class="flag-row">
+          <div class="flag-main">${typeIco('embed')}<div><strong>Embeds · ${a.embeds.length}</strong><span>Heaviest single type (mult 2.0) ≈ load of ~${embedWeighted.toLocaleString('en-US')} primitives. Convert unused ones → bookmark/link.</span></div></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="embeds" ${dis}>Select</button></div>
+        </div>`);
+      if (a.images.length > 0) heavyRows.push(`
+        <div class="flag-row">
+          <div class="flag-main">${typeIco('image')}<div><strong>Images · ${a.images.length}</strong>${a.measured || a.measuring ? `<div class="measure-slot"></div>` : '<span>Candidates for shrinking in the "Images" tab.</span>'}</div></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="images" ${dis}>Select</button></div>
+        </div>`);
+      if (m.unsupportedCount > 0) heavyRows.push(`
+        <div class="flag-row">
+          <div class="flag-main">${typeIco('unsupported')}<div><strong>Others · ${m.unsupportedCount}</strong><span>Not readable via SDK (often pen, mockup, Kanban). Counted conservatively at mult 1.7 – not auditable, likely heavy.</span></div></div>
+          <div class="flag-actions"></div>
+        </div>`);
+      if (a.tables.length > 0) heavyRows.push(`
+        <div class="flag-row">
+          <div class="flag-main">${typeIco('table')}<div><strong>Tables · ${a.tables.length}</strong><span>With many columns, keep under 200 rows (row count not readable via SDK – check manually). Board limit: max. 250 structured widgets (tables + timelines + synced cards).</span></div></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="tables" ${dis}>Select</button></div>
+        </div>`);
+      if (a.outside.length > 0) heavyRows.push(`
+        <div class="flag-row">
+          <div class="flag-main">${typeIco('frame')}<div><strong>Outside frames · ${a.outside.length}</strong><span>Geometrically estimated – please verify visually.</span></div></div>
+          <div class="flag-actions"><button class="mini-button" type="button" data-focus="outside" ${dis}>Select</button></div>
+        </div>`);
+      const heavyBlock = heavyRows.length ? `<p class="subhead">Heavy content</p>${heavyRows.join('')}` : '';
+
       box.innerHTML = `
         <div class="card">
           <div class="audit-total">
@@ -1925,11 +1945,6 @@
             </div>
             <span class="badge ${status.cls}"><span class="badge-dot"></span>${status.text}</span>
           </div>
-          <div class="index-line">
-            <span>Weighted load index <b>${m.loadIndex.toLocaleString('en-US')}</b> (${delta >= 0 ? '+' : ''}${delta}% vs. count)</span>
-          </div>
-          <p class="lead">Miro notes effects from ~${OBJECT_THRESHOLD_SOFT.toLocaleString('en-US')} objects and recommends staying under ${OBJECT_THRESHOLD_MAX.toLocaleString('en-US')}. The 1,000/5,000 indicator is count-based; the load index is an analytical weighting (not measured Miro values) for ranking.</p>
-          <p class="lead">${indexNote}</p>
         </div>
 
         ${dimBlock('Live-sync risk (lag during the session)', m.syncTop,
@@ -1937,31 +1952,7 @@
         ${dimBlock('Load / RAM risk (slow start, "Syncing…")', m.loadTop,
           'Drivers are embeds, documents, tables and images. Lever: flatten, embeds to bookmarks, shrink images.')}
 
-        <p class="subhead">Heavy content</p>
-
-        <div class="flag-row">
-          <div class="flag-main">${typeIco('embed')}<div><strong>Embeds · ${a.embeds.length}</strong><span>Heaviest single type (mult 2.0) ≈ load of ~${embedWeighted.toLocaleString('en-US')} primitives. Convert unused ones → bookmark/link.</span></div></div>
-          <div class="flag-actions"><button class="mini-button" type="button" data-focus="embeds" ${dis}>Select</button></div>
-        </div>
-        <div class="flag-row">
-          <div class="flag-main">${typeIco('image')}<div><strong>Images · ${a.images.length}</strong>${a.measured || a.measuring ? `<div class="measure-slot"></div>` : '<span>Candidates for shrinking in the "Images" tab.</span>'}</div></div>
-          <div class="flag-actions">
-            <button class="mini-button" type="button" data-focus="images" ${dis}>Select</button>
-          </div>
-        </div>
-        ${m.unsupportedCount > 0 ? `
-        <div class="flag-row">
-          <div class="flag-main">${typeIco('unsupported')}<div><strong>Others · ${m.unsupportedCount}</strong><span>Not readable via SDK (often pen, mockup, Kanban). Counted conservatively at mult 1.7 – not auditable, likely heavy.</span></div></div>
-          <div class="flag-actions"></div>
-        </div>` : ''}
-        <div class="flag-row">
-          <div class="flag-main">${typeIco('table')}<div><strong>Tables · ${a.tables.length}</strong><span>With many columns, keep under 200 rows (row count not readable via SDK – check manually). Board limit: max. 250 structured widgets (tables + timelines + synced cards).</span></div></div>
-          <div class="flag-actions"><button class="mini-button" type="button" data-focus="tables" ${dis}>Select</button></div>
-        </div>
-        <div class="flag-row">
-          <div class="flag-main">${typeIco('frame')}<div><strong>Outside frames · ${a.outside.length}</strong><span>Geometrically estimated – please verify visually.</span></div></div>
-          <div class="flag-actions"><button class="mini-button" type="button" data-focus="outside" ${dis}>Select</button></div>
-        </div>
+        ${heavyBlock}
 
         <p class="subhead">All objects by type</p>
         <ul class="count-list">
@@ -2050,8 +2041,18 @@
       try {
         const m = computeAuditMetrics(a.counts);
         const status = objectStatus(a.total);
-        const delta = a.total > 0 ? Math.round(((m.loadIndex - a.total) / a.total) * 100) : 0;
         const dateStr = new Date().toLocaleString('en-US');
+
+        // Heavy content: nur vorhandene Klassen auflisten (Anzahl > 0) – konsistent mit der Audit-Ansicht.
+        const heavyParts = [];
+        if (a.embeds.length) heavyParts.push(`Embeds: ${a.embeds.length}`);
+        if (a.images.length) heavyParts.push(`Images: ${a.images.length}`);
+        if (a.tables.length) heavyParts.push(`Tables: ${a.tables.length}`);
+        if (m.unsupportedCount) heavyParts.push(`Others: ${m.unsupportedCount}`);
+        if (a.outside.length) heavyParts.push(`Outside frames: ${a.outside.length}`);
+        const heavyReport = heavyParts.length
+          ? '<p><strong>Heavy content</strong></p>' + `<p>${heavyParts.join(' &middot; ')}</p>` + '<p> </p>'
+          : '';
 
         const topTypes = Object.entries(a.counts)
           .filter(([t]) => t !== 'tag')
@@ -2069,13 +2070,9 @@
         const content =
           '<p><strong>Overview</strong></p>' +
           `<p>Objects (excl. tags): ${a.total.toLocaleString('en-US')}</p>` +
-          `<p>Weighted load index: ${m.loadIndex.toLocaleString('en-US')} (${delta >= 0 ? '+' : ''}${delta}% vs. count)</p>` +
           `<p>Status: ${escapeHtml(status.text)}</p>` +
           '<p> </p>' +
-          '<p><strong>Heavy content</strong></p>' +
-          `<p>Embeds: ${a.embeds.length} &middot; Images: ${a.images.length} &middot; Tables: ${a.tables.length}</p>` +
-          `<p>Others: ${m.unsupportedCount} &middot; Outside frames: ${a.outside.length}</p>` +
-          '<p> </p>' +
+          heavyReport +
           '<p><strong>Top object types</strong></p>' +
           topTypes +
           '<p> </p>' +

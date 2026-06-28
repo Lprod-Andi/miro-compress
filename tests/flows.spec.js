@@ -29,7 +29,7 @@ test.describe('flows', () => {
     expect(r.synced).toBe(1);
   });
 
-  test('audit counts objects and renders the index', async ({ page }) => {
+  test('audit counts objects, hides the load index and only shows present heavy classes', async ({ page }) => {
     const frame = await openApp(page);
     await frame.evaluate(() => {
       window.__mock.items = [
@@ -42,16 +42,23 @@ test.describe('flows', () => {
     await frame.locator('#run-audit-button').click();
     await frame.waitForFunction(() => state.audit && !state.audit.scanning && !state.audit.error);
 
-    const r = await frame.evaluate(() => ({
-      total: state.audit.total,
-      embeds: state.audit.embeds.length,
-      images: state.audit.images.length,
-      hasIndex: document.getElementById('audit-results').innerText.includes('Weighted load index'),
-    }));
+    const r = await frame.evaluate(() => {
+      const txt = document.getElementById('audit-results').innerText;
+      return {
+        total: state.audit.total,
+        embeds: state.audit.embeds.length,
+        images: state.audit.images.length,
+        hasIndex: txt.includes('Weighted load index'),
+        heavyHasEmbeds: txt.includes('Embeds ·'),   // 3 embeds -> shown
+        heavyHasTables: txt.includes('Tables ·'),    // 0 tables -> hidden
+      };
+    });
     expect(r.total).toBe(10);
     expect(r.embeds).toBe(3);
     expect(r.images).toBe(2);
-    expect(r.hasIndex).toBe(true);
+    expect(r.hasIndex).toBe(false);
+    expect(r.heavyHasEmbeds).toBe(true);
+    expect(r.heavyHasTables).toBe(false);
   });
 
   test('manual backup then restore brings back the original', async ({ page }) => {
