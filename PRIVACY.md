@@ -1,6 +1,6 @@
 # Privacy Policy – Board Compress
 
-**Last updated: 19 June 2026**
+**Last updated: 22 June 2026**
 
 Board Compress is a Miro app for optimizing boards (shrinking images, board audit,
 converting embeds into links, local backups). This policy describes which data is
